@@ -12,6 +12,7 @@ import {
   Monitor,
   Timer
 } from 'lucide-react';
+import wakezillaLogo from './assets/wakezilla.png';
 
 function App() {
   const [copied, setCopied] = useState(false);
@@ -76,7 +77,7 @@ function App() {
         <nav className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
             <img
-              src="https://raw.githubusercontent.com/guibeira/wakezilla/main/assets/wakezilla.png"
+              src={wakezillaLogo}
               alt="Wakezilla"
               className="w-12 h-12 object-contain"
             />
@@ -102,7 +103,7 @@ function App() {
             {/* Mascot */}
             <div className="flex justify-center mb-8 animate-fade-in">
               <img
-                src="https://raw.githubusercontent.com/guibeira/wakezilla/main/assets/wakezilla.png"
+                src={wakezillaLogo}
                 alt="Wakezilla"
                 className="w-32 h-32 object-contain drop-shadow-2xl"
               />
@@ -388,7 +389,7 @@ function App() {
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <img
-              src="https://raw.githubusercontent.com/guibeira/wakezilla/main/assets/wakezilla.png"
+              src={wakezillaLogo}
               alt="Wakezilla"
               className="w-8 h-8 object-contain"
             />
