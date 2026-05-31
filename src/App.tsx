@@ -431,13 +431,13 @@ function App() {
             <p className="text-slate-400 mb-8 max-w-xl mx-auto">
               Get started in seconds with a single command. No complex setup required.
             </p>
-            <div className="inline-flex flex-col sm:flex-row items-center gap-4 bg-slate-800/80 backdrop-blur-sm border border-slate-700 rounded-xl p-2">
-              <code className="px-4 py-2 text-rose-400 font-mono">
+            <div className="inline-flex w-full max-w-2xl flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 bg-slate-800/80 backdrop-blur-sm border border-slate-700 rounded-xl p-2">
+              <code className="min-w-0 flex-1 overflow-x-auto px-4 py-2 text-left text-rose-400 font-mono text-sm sm:text-base">
                 curl -fsSL https://wakezilla.dev/install.sh | sh
               </code>
               <button
                 onClick={copyToClipboard}
-                className="flex items-center gap-2 px-4 py-2 bg-rose-600 hover:bg-rose-500 text-white rounded-lg transition-colors"
+                className="flex items-center justify-center gap-2 px-4 py-2 bg-rose-600 hover:bg-rose-500 text-white rounded-lg transition-colors"
               >
                 {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
                 {copied ? 'Copied!' : 'Copy'}
