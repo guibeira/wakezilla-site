@@ -16,18 +16,35 @@ import {
 import wakezillaLogo from './assets/wakezilla.png';
 import { fetchGitHubStars, formatGitHubStars } from './githubStars';
 
+type GitHubStarsState =
+  | { status: 'loading' }
+  | { status: 'loaded'; count: number }
+  | { status: 'error' };
+
 function App() {
   const [copied, setCopied] = useState(false);
   const [animationStep, setAnimationStep] = useState(0);
-  const [githubStars, setGithubStars] = useState<number | null>(null);
+  const [githubStars, setGithubStars] = useState<GitHubStarsState>({ status: 'loading' });
 
   const installCommand = 'curl -fsSL https://wakezilla.dev/install.sh | sh';
 
-  const githubStarsValue = githubStars === null ? '...' : formatGitHubStars(githubStars);
-  const githubStarsLabel = githubStars === null ? 'Stars' : `${githubStarsValue} stars`;
-  const githubRepositoryAriaLabel = githubStars === null
-    ? 'GitHub repository, stars loading'
-    : `GitHub repository, ${githubStarsLabel}`;
+  const githubStarsValue = githubStars.status === 'loaded'
+    ? formatGitHubStars(githubStars.count)
+    : githubStars.status === 'error'
+      ? 'Unavailable'
+      : '...';
+  const githubStarsLabel = githubStars.status === 'loaded'
+    ? `${githubStarsValue} stars`
+    : githubStars.status === 'error'
+      ? 'Stars unavailable'
+      : 'Stars';
+  const githubStarsAriaStatus = githubStars.status === 'loaded'
+    ? `${githubStarsValue} stars`
+    : githubStars.status === 'error'
+      ? 'stars unavailable'
+      : 'stars loading';
+  const githubRepositoryAriaLabel = `GitHub repository, ${githubStarsAriaStatus}`;
+  const heroGithubRepositoryAriaLabel = `View on GitHub repository, ${githubStarsAriaStatus}`;
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -42,11 +59,14 @@ function App() {
     fetchGitHubStars()
       .then((starCount) => {
         if (isMounted) {
-          setGithubStars(starCount);
+          setGithubStars({ status: 'loaded', count: starCount });
         }
       })
       .catch((err: unknown) => {
         console.error('Failed to load GitHub stars:', err);
+        if (isMounted) {
+          setGithubStars({ status: 'error' });
+        }
       });
 
     return () => {
@@ -204,7 +224,7 @@ function App() {
                 href="https://github.com/guibeira/wakezilla"
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label={githubRepositoryAriaLabel}
+                aria-label={heroGithubRepositoryAriaLabel}
                 className="flex max-w-full flex-wrap items-center justify-center gap-x-2 gap-y-1 px-4 py-3 bg-white text-slate-900 font-semibold rounded-xl hover:bg-slate-100 transition-all duration-200 hover:scale-105 shadow-xl sm:gap-2 sm:px-8 sm:py-4"
               >
                 <Github className="w-5 h-5 flex-shrink-0" />
