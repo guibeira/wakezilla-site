@@ -15,6 +15,8 @@ describe('parseGitHubStarCount', () => {
     expect(() => parseGitHubStarCount({})).toThrow('stargazers_count');
     expect(() => parseGitHubStarCount({ stargazers_count: '123' })).toThrow('invalid');
     expect(() => parseGitHubStarCount({ stargazers_count: -1 })).toThrow('invalid');
+    expect(() => parseGitHubStarCount({ stargazers_count: Number.NaN })).toThrow('invalid');
+    expect(() => parseGitHubStarCount({ stargazers_count: Infinity })).toThrow('invalid');
   });
 });
 
@@ -52,6 +54,8 @@ describe('fetchGitHubStars', () => {
       json: async () => ({}),
     }) as Response);
 
-    await expect(fetchGitHubStars(fetchMock as unknown as typeof fetch)).rejects.toThrow('403');
+    await expect(fetchGitHubStars(fetchMock as unknown as typeof fetch)).rejects.toThrow(
+      'GitHub stars request failed with 403',
+    );
   });
 });
