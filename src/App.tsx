@@ -6,6 +6,7 @@ import {
   Copy,
   Check,
   Github,
+  Star,
   Server,
   Wifi,
   ArrowRight,
@@ -13,18 +14,41 @@ import {
   Timer
 } from 'lucide-react';
 import wakezillaLogo from './assets/wakezilla.png';
+import { fetchGitHubStars, formatGitHubStars } from './githubStars';
 
 function App() {
   const [copied, setCopied] = useState(false);
   const [animationStep, setAnimationStep] = useState(0);
+  const [githubStars, setGithubStars] = useState<number | null>(null);
 
   const installCommand = 'curl -fsSL https://wakezilla.dev/install.sh | sh';
+
+  const githubStarsValue = githubStars === null ? '...' : formatGitHubStars(githubStars);
+  const githubStarsLabel = githubStars === null ? 'Stars' : `${githubStarsValue} stars`;
 
   useEffect(() => {
     const interval = setInterval(() => {
       setAnimationStep((prev) => (prev + 1) % 5);
     }, 2000);
     return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    fetchGitHubStars()
+      .then((starCount) => {
+        if (isMounted) {
+          setGithubStars(starCount);
+        }
+      })
+      .catch((err: unknown) => {
+        console.error('Failed to load GitHub stars:', err);
+      });
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const copyToClipboard = async () => {
@@ -91,6 +115,10 @@ function App() {
           >
             <Github className="w-5 h-5" />
             <span className="hidden sm:inline">GitHub</span>
+            <span className="inline-flex items-center gap-1 text-sm text-slate-400">
+              <Star className="w-4 h-4" />
+              {githubStarsLabel}
+            </span>
           </a>
         </nav>
       </header>
@@ -175,7 +203,11 @@ function App() {
                 className="flex items-center gap-2 px-8 py-4 bg-white text-slate-900 font-semibold rounded-xl hover:bg-slate-100 transition-all duration-200 hover:scale-105 shadow-xl"
               >
                 <Github className="w-5 h-5" />
-                View on GitHub
+                <span>View on GitHub</span>
+                <span className="flex items-center gap-1 text-sm text-slate-600">
+                  <Star className="w-4 h-4" />
+                  {githubStarsLabel}
+                </span>
               </a>
               <a
                 href="https://github.com/guibeira/wakezilla#readme"
@@ -338,7 +370,7 @@ function App() {
 
           {/* Stats Section */}
           <div className="bg-gradient-to-r from-rose-500/10 via-red-500/10 to-orange-500/10 border border-slate-700 rounded-2xl p-8 sm:p-12 mb-24">
-            <div className="grid sm:grid-cols-3 gap-8 text-center">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
               <div>
                 <div className="text-4xl sm:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-rose-400 to-red-400 mb-2">
                   100%
@@ -350,6 +382,12 @@ function App() {
                   Rust
                 </div>
                 <div className="text-slate-400">Built for Performance</div>
+              </div>
+              <div>
+                <div className="text-4xl sm:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-rose-400 mb-2">
+                  {githubStarsValue}
+                </div>
+                <div className="text-slate-400">GitHub Stars</div>
               </div>
               <div>
                 <div className="text-4xl sm:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-rose-400 mb-2">
