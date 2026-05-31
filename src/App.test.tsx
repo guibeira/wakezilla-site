@@ -40,4 +40,15 @@ describe('App GitHub stars', () => {
       repoLinks.some((link) => link.getAttribute('href') === 'https://github.com/guibeira/wakezilla'),
     ).toBe(true);
   });
+
+  it('keeps the full hero GitHub CTA copy visible at all breakpoints', () => {
+    const fetchMock = vi.fn(() => new Promise<Response>(() => {}));
+    vi.stubGlobal('fetch', fetchMock);
+
+    render(<App />);
+
+    const ctaCopy = screen.getByText('View on GitHub');
+    expect(ctaCopy).not.toHaveClass('hidden');
+    expect(ctaCopy.closest('a')).toHaveAttribute('href', 'https://github.com/guibeira/wakezilla');
+  });
 });

@@ -205,12 +205,11 @@ function App() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={githubRepositoryAriaLabel}
-                className="flex max-w-full flex-wrap items-center justify-center gap-x-2 gap-y-1 px-5 py-3 bg-white text-slate-900 font-semibold rounded-xl hover:bg-slate-100 transition-all duration-200 hover:scale-105 shadow-xl sm:gap-2 sm:px-8 sm:py-4"
+                className="flex max-w-full flex-wrap items-center justify-center gap-x-2 gap-y-1 px-4 py-3 bg-white text-slate-900 font-semibold rounded-xl hover:bg-slate-100 transition-all duration-200 hover:scale-105 shadow-xl sm:gap-2 sm:px-8 sm:py-4"
               >
-                <Github className="w-5 h-5" />
-                <span className="sm:hidden">GitHub</span>
-                <span className="hidden sm:inline">View on GitHub</span>
-                <span className="flex items-center gap-1 whitespace-nowrap text-sm text-slate-600">
+                <Github className="w-5 h-5 flex-shrink-0" />
+                <span>View on GitHub</span>
+                <span className="flex basis-full items-center justify-center gap-1 text-sm text-slate-600 sm:basis-auto">
                   <Star className="w-4 h-4" />
                   {githubStarsLabel}
                 </span>
