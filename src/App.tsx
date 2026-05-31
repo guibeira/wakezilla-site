@@ -25,6 +25,9 @@ function App() {
 
   const githubStarsValue = githubStars === null ? '...' : formatGitHubStars(githubStars);
   const githubStarsLabel = githubStars === null ? 'Stars' : `${githubStarsValue} stars`;
+  const githubRepositoryAriaLabel = githubStars === null
+    ? 'GitHub repository, stars loading'
+    : `GitHub repository, ${githubStarsLabel}`;
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -111,11 +114,12 @@ function App() {
             href="https://github.com/guibeira/wakezilla"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 px-4 py-2 text-slate-300 hover:text-white transition-colors"
+            aria-label={githubRepositoryAriaLabel}
+            className="flex items-center gap-2 px-3 py-2 text-slate-300 hover:text-white transition-colors sm:px-4"
           >
             <Github className="w-5 h-5" />
             <span className="hidden sm:inline">GitHub</span>
-            <span className="inline-flex items-center gap-1 text-sm text-slate-400">
+            <span className="hidden items-center gap-1 whitespace-nowrap text-sm text-slate-400 sm:inline-flex">
               <Star className="w-4 h-4" />
               {githubStarsLabel}
             </span>
@@ -200,11 +204,13 @@ function App() {
                 href="https://github.com/guibeira/wakezilla"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 px-8 py-4 bg-white text-slate-900 font-semibold rounded-xl hover:bg-slate-100 transition-all duration-200 hover:scale-105 shadow-xl"
+                aria-label={githubRepositoryAriaLabel}
+                className="flex max-w-full flex-wrap items-center justify-center gap-x-2 gap-y-1 px-5 py-3 bg-white text-slate-900 font-semibold rounded-xl hover:bg-slate-100 transition-all duration-200 hover:scale-105 shadow-xl sm:gap-2 sm:px-8 sm:py-4"
               >
                 <Github className="w-5 h-5" />
-                <span>View on GitHub</span>
-                <span className="flex items-center gap-1 text-sm text-slate-600">
+                <span className="sm:hidden">GitHub</span>
+                <span className="hidden sm:inline">View on GitHub</span>
+                <span className="flex items-center gap-1 whitespace-nowrap text-sm text-slate-600">
                   <Star className="w-4 h-4" />
                   {githubStarsLabel}
                 </span>
@@ -439,6 +445,7 @@ function App() {
               href="https://github.com/guibeira/wakezilla"
               target="_blank"
               rel="noopener noreferrer"
+              aria-label={githubRepositoryAriaLabel}
               className="text-slate-400 hover:text-white transition-colors flex items-center gap-2"
             >
               <Github className="w-5 h-5" />

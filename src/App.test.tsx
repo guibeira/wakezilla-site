@@ -23,7 +23,7 @@ describe('App GitHub stars', () => {
     expect(await screen.findAllByText('1,234')).not.toHaveLength(0);
     expect(screen.getByText('GitHub Stars')).toBeInTheDocument();
 
-    const repoLinks = screen.getAllByRole('link', { name: /1,234 stars/i });
+    const repoLinks = screen.getAllByRole('link', { name: /GitHub repository, 1,234 stars/i });
     expect(
       repoLinks.some((link) => link.getAttribute('href') === 'https://github.com/guibeira/wakezilla'),
     ).toBe(true);
@@ -35,7 +35,7 @@ describe('App GitHub stars', () => {
 
     render(<App />);
 
-    const repoLinks = screen.getAllByRole('link', { name: /github/i });
+    const repoLinks = screen.getAllByRole('link', { name: /GitHub repository, stars loading/i });
     expect(
       repoLinks.some((link) => link.getAttribute('href') === 'https://github.com/guibeira/wakezilla'),
     ).toBe(true);
