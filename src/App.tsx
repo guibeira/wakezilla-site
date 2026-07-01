@@ -21,12 +21,40 @@ type GitHubStarsState =
   | { status: 'loaded'; count: number }
   | { status: 'error' };
 
+type InstallPlatform = 'unix' | 'windows';
+
+const installCommands: Record<InstallPlatform, { command: string; shell: string; note: string }> = {
+  unix: {
+    command: 'curl -fsSL https://wakezilla.dev/install.sh | sh',
+    shell: 'bash',
+    note: 'Installs on Linux/macOS via Homebrew, Cargo, or from source',
+  },
+  windows: {
+    command: 'irm https://wakezilla.dev/install.ps1 | iex',
+    shell: 'powershell',
+    note: 'Installs wakezilla.exe and adds it to your user PATH',
+  },
+};
+
+function detectInstallPlatform(): InstallPlatform {
+  if (typeof navigator === 'undefined') {
+    return 'unix';
+  }
+
+  const platform = navigator.platform.toLowerCase();
+  const userAgent = navigator.userAgent.toLowerCase();
+
+  return platform.includes('win') || userAgent.includes('windows') ? 'windows' : 'unix';
+}
+
 function App() {
   const [copied, setCopied] = useState(false);
   const [animationStep, setAnimationStep] = useState(0);
+  const [installPlatform] = useState<InstallPlatform>(() => detectInstallPlatform());
   const [githubStars, setGithubStars] = useState<GitHubStarsState>({ status: 'loading' });
 
-  const installCommand = 'curl -fsSL https://wakezilla.dev/install.sh | sh';
+  const selectedInstall = installCommands[installPlatform];
+  const installCommand = selectedInstall.command;
 
   const githubStarsValue = githubStars.status === 'loaded'
     ? formatGitHubStars(githubStars.count)
@@ -188,7 +216,7 @@ function App() {
                     <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
                     <div className="w-3 h-3 rounded-full bg-green-500"></div>
                   </div>
-                  <span className="text-sm text-slate-500 font-mono">bash</span>
+                  <span className="text-sm text-slate-500 font-mono">{selectedInstall.shell}</span>
                 </div>
                 <div className="flex items-center gap-3 p-4">
                   <code className="flex-1 text-left text-rose-400 font-mono text-sm sm:text-base overflow-x-auto">
@@ -214,7 +242,7 @@ function App() {
                 </div>
               </div>
               <p className="text-sm text-slate-500 mt-3">
-                Installs via Homebrew, Cargo, or from source
+                {selectedInstall.note}
               </p>
             </div>
 
@@ -433,7 +461,7 @@ function App() {
             </p>
             <div className="inline-flex w-full max-w-2xl flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 bg-slate-800/80 backdrop-blur-sm border border-slate-700 rounded-xl p-2">
               <code className="min-w-0 flex-1 overflow-x-auto px-4 py-2 text-left text-rose-400 font-mono text-sm sm:text-base">
-                curl -fsSL https://wakezilla.dev/install.sh | sh
+                {installCommand}
               </code>
               <button
                 onClick={copyToClipboard}
