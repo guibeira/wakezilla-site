@@ -6,6 +6,7 @@ import {
   Copy,
   Check,
   Github,
+  Star,
   Server,
   Wifi,
   ArrowRight,
@@ -13,6 +14,12 @@ import {
   Timer
 } from 'lucide-react';
 import wakezillaLogo from './assets/wakezilla.png';
+import { fetchGitHubStars, formatGitHubStars } from './githubStars';
+
+type GitHubStarsState =
+  | { status: 'loading' }
+  | { status: 'loaded'; count: number }
+  | { status: 'error' };
 
 type InstallPlatform = 'unix' | 'windows';
 
@@ -44,15 +51,55 @@ function App() {
   const [copied, setCopied] = useState(false);
   const [animationStep, setAnimationStep] = useState(0);
   const [installPlatform] = useState<InstallPlatform>(() => detectInstallPlatform());
+  const [githubStars, setGithubStars] = useState<GitHubStarsState>({ status: 'loading' });
 
   const selectedInstall = installCommands[installPlatform];
   const installCommand = selectedInstall.command;
+
+  const githubStarsValue = githubStars.status === 'loaded'
+    ? formatGitHubStars(githubStars.count)
+    : githubStars.status === 'error'
+      ? 'Unavailable'
+      : '...';
+  const githubStarsLabel = githubStars.status === 'loaded'
+    ? `${githubStarsValue} stars`
+    : githubStars.status === 'error'
+      ? 'Stars unavailable'
+      : 'Stars';
+  const githubStarsAriaStatus = githubStars.status === 'loaded'
+    ? `${githubStarsValue} stars`
+    : githubStars.status === 'error'
+      ? 'stars unavailable'
+      : 'stars loading';
+  const githubRepositoryAriaLabel = `GitHub repository, ${githubStarsAriaStatus}`;
+  const heroGithubRepositoryAriaLabel = `View on GitHub repository, ${githubStarsAriaStatus}`;
 
   useEffect(() => {
     const interval = setInterval(() => {
       setAnimationStep((prev) => (prev + 1) % 5);
     }, 2000);
     return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    fetchGitHubStars()
+      .then((starCount) => {
+        if (isMounted) {
+          setGithubStars({ status: 'loaded', count: starCount });
+        }
+      })
+      .catch((err: unknown) => {
+        console.error('Failed to load GitHub stars:', err);
+        if (isMounted) {
+          setGithubStars({ status: 'error' });
+        }
+      });
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const copyToClipboard = async () => {
@@ -115,10 +162,15 @@ function App() {
             href="https://github.com/guibeira/wakezilla"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 px-4 py-2 text-slate-300 hover:text-white transition-colors"
+            aria-label={githubRepositoryAriaLabel}
+            className="flex items-center gap-2 px-3 py-2 text-slate-300 hover:text-white transition-colors sm:px-4"
           >
             <Github className="w-5 h-5" />
             <span className="hidden sm:inline">GitHub</span>
+            <span className="hidden items-center gap-1 whitespace-nowrap text-sm text-slate-400 sm:inline-flex">
+              <Star className="w-4 h-4" />
+              {githubStarsLabel}
+            </span>
           </a>
         </nav>
       </header>
@@ -200,10 +252,15 @@ function App() {
                 href="https://github.com/guibeira/wakezilla"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 px-8 py-4 bg-white text-slate-900 font-semibold rounded-xl hover:bg-slate-100 transition-all duration-200 hover:scale-105 shadow-xl"
+                aria-label={heroGithubRepositoryAriaLabel}
+                className="flex max-w-full flex-wrap items-center justify-center gap-x-2 gap-y-1 px-4 py-3 bg-white text-slate-900 font-semibold rounded-xl hover:bg-slate-100 transition-all duration-200 hover:scale-105 shadow-xl sm:gap-2 sm:px-8 sm:py-4"
               >
-                <Github className="w-5 h-5" />
-                View on GitHub
+                <Github className="w-5 h-5 flex-shrink-0" />
+                <span>View on GitHub</span>
+                <span className="flex basis-full items-center justify-center gap-1 text-sm text-slate-600 sm:basis-auto">
+                  <Star className="w-4 h-4" />
+                  {githubStarsLabel}
+                </span>
               </a>
               <a
                 href="https://github.com/guibeira/wakezilla#readme"
@@ -366,7 +423,7 @@ function App() {
 
           {/* Stats Section */}
           <div className="bg-gradient-to-r from-rose-500/10 via-red-500/10 to-orange-500/10 border border-slate-700 rounded-2xl p-8 sm:p-12 mb-24">
-            <div className="grid sm:grid-cols-3 gap-8 text-center">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
               <div>
                 <div className="text-4xl sm:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-rose-400 to-red-400 mb-2">
                   100%
@@ -378,6 +435,12 @@ function App() {
                   Rust
                 </div>
                 <div className="text-slate-400">Built for Performance</div>
+              </div>
+              <div>
+                <div className="text-4xl sm:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-rose-400 mb-2">
+                  {githubStarsValue}
+                </div>
+                <div className="text-slate-400">GitHub Stars</div>
               </div>
               <div>
                 <div className="text-4xl sm:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-rose-400 mb-2">
@@ -396,13 +459,13 @@ function App() {
             <p className="text-slate-400 mb-8 max-w-xl mx-auto">
               Get started in seconds with a single command. No complex setup required.
             </p>
-            <div className="inline-flex flex-col sm:flex-row items-center gap-4 bg-slate-800/80 backdrop-blur-sm border border-slate-700 rounded-xl p-2">
-              <code className="px-4 py-2 text-rose-400 font-mono">
+            <div className="inline-flex w-full max-w-2xl flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 bg-slate-800/80 backdrop-blur-sm border border-slate-700 rounded-xl p-2">
+              <code className="min-w-0 flex-1 overflow-x-auto px-4 py-2 text-left text-rose-400 font-mono text-sm sm:text-base">
                 {installCommand}
               </code>
               <button
                 onClick={copyToClipboard}
-                className="flex items-center gap-2 px-4 py-2 bg-rose-600 hover:bg-rose-500 text-white rounded-lg transition-colors"
+                className="flex items-center justify-center gap-2 px-4 py-2 bg-rose-600 hover:bg-rose-500 text-white rounded-lg transition-colors"
               >
                 {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
                 {copied ? 'Copied!' : 'Copy'}
@@ -429,6 +492,7 @@ function App() {
               href="https://github.com/guibeira/wakezilla"
               target="_blank"
               rel="noopener noreferrer"
+              aria-label={githubRepositoryAriaLabel}
               className="text-slate-400 hover:text-white transition-colors flex items-center gap-2"
             >
               <Github className="w-5 h-5" />
