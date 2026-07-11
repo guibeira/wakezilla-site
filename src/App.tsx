@@ -32,7 +32,7 @@ const installCommands: Record<InstallPlatform, { command: string; shell: string;
   windows: {
     command: 'irm https://wakezilla.dev/install.ps1 | iex',
     shell: 'powershell',
-    note: 'Installs wakezilla.exe and adds it to your user PATH',
+    note: 'Installs the Wakezilla tray app, creates shortcuts, and adds wakezilla.exe to your user PATH',
   },
 };
 
