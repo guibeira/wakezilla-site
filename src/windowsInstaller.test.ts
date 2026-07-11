@@ -29,4 +29,9 @@ describe('Windows installer', () => {
     expect(installer).toContain('$servicesToRestart = @(Stop-WakezillaServicesForInstall)');
     expect(installer).toContain('Restart-WakezillaServicesAfterInstall -ServiceNames $servicesToRestart');
   });
+
+  it('leaves protected Windows services running during user installer updates', () => {
+    expect(installer).toContain('function Test-WakezillaServiceUsesProtectedBinary');
+    expect(installer).toContain('if (Test-WakezillaServiceUsesProtectedBinary -ServiceName $serviceName)');
+  });
 });
