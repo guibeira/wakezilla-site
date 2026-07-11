@@ -11,4 +11,11 @@ describe('Windows installer', () => {
     expect(installer).toContain('WakezillaTray');
     expect(installer).toContain('uninstall-wakezilla.ps1');
   });
+
+  it('supports legacy Windows PowerShell architecture and service handling', () => {
+    expect(installer).toContain('function Get-WindowsArchitecture');
+    expect(installer).toContain('PROCESSOR_ARCHITEW6432');
+    expect(installer).toContain('PROCESSOR_ARCHITECTURE');
+    expect(installer).toContain('$service.WaitForStatus("Stopped", [TimeSpan]::FromSeconds(30))');
+  });
 });
