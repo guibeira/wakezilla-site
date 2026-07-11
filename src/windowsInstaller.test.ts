@@ -18,4 +18,10 @@ describe('Windows installer', () => {
     expect(installer).toContain('PROCESSOR_ARCHITECTURE');
     expect(installer).toContain('$service.WaitForStatus("Stopped", [TimeSpan]::FromSeconds(30))');
   });
+
+  it('replaces existing Windows installation files safely', () => {
+    expect(installer).toContain('function Publish-WakezillaFile');
+    expect(installer).toContain('Copy-Item -LiteralPath $Source -Destination $Destination -Force');
+    expect(installer).toContain('Publish-WakezillaFile -Source (Join-Path $temporary "wakezilla.exe") -Destination $cli');
+  });
 });
