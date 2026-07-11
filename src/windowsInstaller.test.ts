@@ -24,4 +24,9 @@ describe('Windows installer', () => {
     expect(installer).toContain('Copy-Item -LiteralPath $Source -Destination $Destination -Force');
     expect(installer).toContain('Publish-WakezillaFile -Source (Join-Path $temporary "wakezilla.exe") -Destination $cli');
   });
+
+  it('stops running Wakezilla services while replacing installation files', () => {
+    expect(installer).toContain('$servicesToRestart = @(Stop-WakezillaServicesForInstall)');
+    expect(installer).toContain('Restart-WakezillaServicesAfterInstall -ServiceNames $servicesToRestart');
+  });
 });
