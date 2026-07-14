@@ -146,4 +146,17 @@ describe('App lifecycle explanation', () => {
     expect(screen.queryByText('Rust')).not.toBeInTheDocument();
     expect(screen.queryByText(/built for performance/i)).not.toBeInTheDocument();
   });
+
+  it('shows the real Wakezilla dashboard instead of a fictional settings panel', () => {
+    const fetchMock = vi.fn(() => new Promise<Response>(() => {}));
+    vi.stubGlobal('fetch', fetchMock);
+
+    render(<App />);
+
+    expect(
+      screen.getByRole('img', { name: /wakezilla web interface for discovering and adding machines/i }),
+    ).toBeInTheDocument();
+    expect(screen.getByText(/actual Wakezilla web interface/i)).toBeInTheDocument();
+    expect(screen.queryByLabelText(/example machine settings/i)).not.toBeInTheDocument();
+  });
 });

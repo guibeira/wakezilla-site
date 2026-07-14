@@ -15,6 +15,7 @@ import {
   TimerReset,
   Zap,
 } from 'lucide-react';
+import wakezillaDashboard from './assets/wakezilla-dashboard.png';
 import wakezillaLogo from './assets/wakezilla.png';
 import { InstallCommand } from './components/InstallCommand';
 import { LifecycleDiagram } from './components/LifecycleDiagram';
@@ -338,20 +339,23 @@ function App() {
             </ul>
           </div>
 
-          <div className="settings-card" aria-label="Example machine settings">
-            <div className="settings-card__bar">
-              <span>Machine settings</span>
-              <span className="status-pill"><span /> ONLINE</span>
+          <figure className="dashboard-preview">
+            <div className="dashboard-preview__chrome" aria-hidden="true">
+              <span /><span /><span />
+              <p>wakezilla.local</p>
             </div>
-            <dl>
-              <div><dt>Name</dt><dd>media-server</dd></div>
-              <div><dt>IP address</dt><dd>192.168.1.42</dd></div>
-              <div><dt>MAC address</dt><dd>AA:BB:CC:DD:EE:FF</dd></div>
-              <div><dt>Port forward</dt><dd>8096 → 8096</dd></div>
-              <div className="settings-card__highlight"><dt>Inactivity period</dt><dd>30 minutes</dd></div>
-            </dl>
-            <p><TimerReset aria-hidden="true" /> Last request updates the idle timer automatically.</p>
-          </div>
+            <img
+              src={wakezillaDashboard}
+              alt="Wakezilla web interface for discovering and adding machines"
+              width="1444"
+              height="1020"
+              loading="lazy"
+            />
+            <figcaption>
+              <span><span /> ACTUAL PRODUCT</span>
+              <p>Actual Wakezilla web interface. Every new connection resets the inactivity timer.</p>
+            </figcaption>
+          </figure>
         </section>
 
         <section id="install" className="section-block section-block--install">
