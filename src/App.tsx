@@ -346,9 +346,9 @@ function App() {
             </div>
             <img
               src={wakezillaDashboard}
-              alt="Wakezilla web interface for discovering and adding machines"
+              alt="Wakezilla web interface for adding machines and configuring port forwards"
               width="1444"
-              height="1020"
+              height="1397"
               loading="lazy"
             />
             <figcaption>
