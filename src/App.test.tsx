@@ -79,3 +79,71 @@ describe('App GitHub stars', () => {
     expect(consoleErrorSpy).toHaveBeenCalledWith('Failed to load GitHub stars:', fetchError);
   });
 });
+
+describe('App lifecycle explanation', () => {
+  it('explains the complete request, response, idle, and shutdown cycle', () => {
+    const fetchMock = vi.fn(() => new Promise<Response>(() => {}));
+    vi.stubGlobal('fetch', fetchMock);
+
+    render(<App />);
+
+    expect(
+      screen.getByRole('heading', {
+        level: 1,
+        name: /your server wakes for the request\. sleeps when the work is done\./i,
+      }),
+    ).toBeInTheDocument();
+    expect(screen.getAllByText('REQUEST').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('RESPONSE').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('200 OK').length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/every new request resets the idle timer/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/after .* without activity.*powers.*down/i).length).toBeGreaterThan(0);
+  });
+
+  it('keeps every lifecycle stage understandable without animation', () => {
+    const fetchMock = vi.fn(() => new Promise<Response>(() => {}));
+    vi.stubGlobal('fetch', fetchMock);
+
+    render(<App />);
+
+    for (const stage of [
+      'Request arrives',
+      'Target checked',
+      'Wake packet sent',
+      'Request forwarded',
+      'Response returned',
+      'Idle timer',
+      'Target sleeps',
+    ]) {
+      expect(screen.getAllByText(stage).length).toBeGreaterThan(0);
+    }
+
+    expect(
+      screen.getByRole('button', { name: /send another request|replay lifecycle/i }),
+    ).toBeInTheDocument();
+  });
+
+  it('uses the approved content order without implementation-language marketing', () => {
+    const fetchMock = vi.fn(() => new Promise<Response>(() => {}));
+    vi.stubGlobal('fetch', fetchMock);
+
+    render(<App />);
+
+    const headings = screen.getAllByRole('heading').map((heading) => heading.textContent ?? '');
+    const expectedHeadings = [
+      'Why keep it running?',
+      'How Wakezilla works',
+      'Built for real homelabs',
+      'Configure the lifecycle',
+      'Install and start saving energy',
+      'Open source, by design',
+      'Let your server sleep.',
+    ];
+
+    const headingPositions = expectedHeadings.map((heading) => headings.indexOf(heading));
+    expect(headingPositions.every((position) => position >= 0)).toBe(true);
+    expect(headingPositions).toEqual([...headingPositions].sort((a, b) => a - b));
+    expect(screen.queryByText('Rust')).not.toBeInTheDocument();
+    expect(screen.queryByText(/built for performance/i)).not.toBeInTheDocument();
+  });
+});

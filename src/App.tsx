@@ -1,19 +1,24 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {
-  Zap,
-  Globe,
-  Power,
-  Copy,
-  Check,
-  Github,
-  Star,
-  Server,
-  Wifi,
   ArrowRight,
-  Monitor,
-  Timer
+  Bot,
+  CheckCircle2,
+  Github,
+  Gauge,
+  Globe2,
+  MonitorPlay,
+  Moon,
+  Network,
+  Power,
+  Server,
+  Star,
+  TimerReset,
+  Zap,
 } from 'lucide-react';
 import wakezillaLogo from './assets/wakezilla.png';
+import { InstallCommand } from './components/InstallCommand';
+import { LifecycleDiagram } from './components/LifecycleDiagram';
+import { SectionHeading } from './components/SectionHeading';
 import { fetchGitHubStars, formatGitHubStars } from './githubStars';
 
 type GitHubStarsState =
@@ -27,14 +32,80 @@ const installCommands: Record<InstallPlatform, { command: string; shell: string;
   unix: {
     command: 'curl -fsSL https://wakezilla.dev/install.sh | sh',
     shell: 'bash',
-    note: 'Installs on Linux/macOS via Homebrew, Cargo, or from source',
+    note: 'Installs a verified prebuilt release on Linux or macOS.',
   },
   windows: {
     command: 'irm https://wakezilla.dev/install.ps1 | iex',
     shell: 'powershell',
-    note: 'Installs the Wakezilla tray app, creates shortcuts, and adds wakezilla.exe to your user PATH',
+    note: 'Installs the Wakezilla tray app, shortcuts, and command-line tools.',
   },
 };
+
+const lifecycleSteps = [
+  {
+    number: '01',
+    title: 'Traffic arrives',
+    description: 'A connection reaches a port managed by Wakezilla.',
+    icon: Globe2,
+  },
+  {
+    number: '02',
+    title: 'The target wakes',
+    description: 'If the machine is offline, Wakezilla sends a magic packet and waits for it.',
+    icon: Zap,
+  },
+  {
+    number: '03',
+    title: 'Request goes through',
+    description: 'The original connection is forwarded to the service when it is ready.',
+    icon: Network,
+  },
+  {
+    number: '04',
+    title: 'Response comes back',
+    description: 'The service response travels back through Wakezilla to the client.',
+    icon: ArrowRight,
+  },
+  {
+    number: '05',
+    title: 'Activity resets the timer',
+    description: 'Every accepted connection updates the target’s last-request time.',
+    icon: TimerReset,
+  },
+  {
+    number: '06',
+    title: 'Silence means sleep',
+    description: 'After the configured idle period, Wakezilla asks the target to power down.',
+    icon: Moon,
+  },
+];
+
+const useCases = [
+  {
+    icon: MonitorPlay,
+    label: 'Media server',
+    title: 'Ready for movie night, quiet the rest of the week.',
+    detail: 'Wake Jellyfin or Plex when somebody opens the app.',
+  },
+  {
+    icon: Bot,
+    label: 'Local AI',
+    title: 'Keep the GPU off until a prompt needs it.',
+    detail: 'Bring an Ollama or inference machine online on demand.',
+  },
+  {
+    icon: Gauge,
+    label: 'Development',
+    title: 'Use powerful hardware only while you are building.',
+    detail: 'Route traffic to a workstation or test server when needed.',
+  },
+  {
+    icon: Server,
+    label: 'Occasional services',
+    title: 'Stop paying the always-on tax for rarely used tools.',
+    detail: 'Perfect for backups, game servers, and internal apps.',
+  },
+];
 
 function detectInstallPlatform(): InstallPlatform {
   if (typeof navigator === 'undefined') {
@@ -49,13 +120,10 @@ function detectInstallPlatform(): InstallPlatform {
 
 function App() {
   const [copied, setCopied] = useState(false);
-  const [animationStep, setAnimationStep] = useState(0);
   const [installPlatform] = useState<InstallPlatform>(() => detectInstallPlatform());
   const [githubStars, setGithubStars] = useState<GitHubStarsState>({ status: 'loading' });
 
   const selectedInstall = installCommands[installPlatform];
-  const installCommand = selectedInstall.command;
-
   const githubStarsValue = githubStars.status === 'loaded'
     ? formatGitHubStars(githubStars.count)
     : githubStars.status === 'error'
@@ -73,13 +141,6 @@ function App() {
       : 'stars loading';
   const githubRepositoryAriaLabel = `GitHub repository, ${githubStarsAriaStatus}`;
   const heroGithubRepositoryAriaLabel = `View on GitHub repository, ${githubStarsAriaStatus}`;
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setAnimationStep((prev) => (prev + 1) % 5);
-    }, 2000);
-    return () => clearInterval(interval);
-  }, []);
 
   useEffect(() => {
     let isMounted = true;
@@ -104,418 +165,291 @@ function App() {
 
   const copyToClipboard = async () => {
     try {
-      await navigator.clipboard.writeText(installCommand);
+      await navigator.clipboard.writeText(selectedInstall.command);
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      window.setTimeout(() => setCopied(false), 2000);
     } catch (err) {
       console.error('Failed to copy:', err);
     }
   };
 
-  const features = [
-    {
-      icon: Zap,
-      title: 'Wake-on-LAN Made Simple',
-      description: 'Power on your machines remotely whenever needed. No more running to the server room.',
-    },
-    {
-      icon: Globe,
-      title: 'Reverse Proxy',
-      description: 'Intercepts traffic and wakes the server automatically if it\'s offline.',
-    },
-    {
-      icon: Power,
-      title: 'Automatic Shutdown',
-      description: 'Saves energy by powering down idle machines after configurable thresholds.',
-    },
-  ];
-
-  const workflowSteps = [
-    { label: 'Request Arrives', icon: Globe, description: 'HTTP request hits the proxy' },
-    { label: 'Check Status', icon: Server, description: 'Proxy checks if server is awake' },
-    { label: 'Send Wake Packet', icon: Wifi, description: 'Wake-on-LAN packet sent if offline' },
-    { label: 'Server Wakes', icon: Power, description: 'Machine powers up remotely' },
-    { label: 'Request Proxied', icon: ArrowRight, description: 'Traffic routed to destination' },
-  ];
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 font-['Inter']">
-      {/* Animated background elements */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-rose-500/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute top-1/2 -left-40 w-96 h-96 bg-red-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-        <div className="absolute -bottom-40 right-1/3 w-72 h-72 bg-orange-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
-      </div>
+    <div className="site-shell">
+      <header className="site-header">
+        <nav className="page-width site-nav" aria-label="Main navigation">
+          <a className="brand" href="#top" aria-label="Wakezilla home">
+            <img src={wakezillaLogo} alt="" />
+            <span>Wakezilla</span>
+          </a>
 
-      {/* Header */}
-      <header className="relative z-10 px-6 py-4">
-        <nav className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <img
-              src={wakezillaLogo}
-              alt="Wakezilla"
-              className="w-12 h-12 object-contain"
-            />
-            <span className="text-2xl font-bold text-white">Wakezilla</span>
+          <div className="site-nav__links">
+            <a href="#how">How it works</a>
+            <a href="#use-cases">Use cases</a>
+            <a href="#install">Install</a>
           </div>
+
           <a
             href="https://github.com/guibeira/wakezilla"
             target="_blank"
             rel="noopener noreferrer"
             aria-label={githubRepositoryAriaLabel}
-            className="flex items-center gap-2 px-3 py-2 text-slate-300 hover:text-white transition-colors sm:px-4"
+            className="github-link"
           >
-            <Github className="w-5 h-5" />
-            <span className="hidden sm:inline">GitHub</span>
-            <span className="hidden items-center gap-1 whitespace-nowrap text-sm text-slate-400 sm:inline-flex">
-              <Star className="w-4 h-4" />
-              {githubStarsLabel}
+            <Github aria-hidden="true" />
+            <span>GitHub</span>
+            <span className="github-link__stars">
+              <Star aria-hidden="true" /> {githubStarsLabel}
             </span>
           </a>
         </nav>
       </header>
 
-      {/* Hero Section */}
-      <main className="relative z-10 px-6 pt-16 pb-24">
-        <div className="max-w-7xl mx-auto">
-          {/* Hero Content */}
-          <div className="text-center mb-16">
-            {/* Mascot */}
-            <div className="flex justify-center mb-8 animate-fade-in">
-              <img
-                src={wakezillaLogo}
-                alt="Wakezilla"
-                className="w-32 h-32 object-contain drop-shadow-2xl"
-              />
-            </div>
-
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-rose-500/10 border border-rose-500/20 rounded-full text-rose-400 text-sm font-medium mb-6 animate-fade-in">
-              <Zap className="w-4 h-4" />
-              Open Source Wake-on-LAN Toolkit
-            </div>
-
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-white mb-6 leading-tight">
-              Wake-on-LAN
-              <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-400 via-red-400 to-orange-400">
-                Made Simple
-              </span>
+      <main id="top">
+        <section className="hero-section page-width">
+          <div className="hero-copy">
+            <p className="section-kicker">ON-DEMAND POWER FOR YOUR HOMELAB</p>
+            <h1>
+              Your server wakes for the request.
+              <span>Sleeps when the work is done.</span>
             </h1>
-
-            <p className="text-xl text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed">
-              Power on your machines remotely whenever needed. Automatic reverse proxy
-              with intelligent power management for the modern homelab.
+            <p className="hero-copy__description">
+              Wakezilla wakes your target, proxies the request, and returns the response.
+              After N minutes without activity, Wakezilla powers the target down automatically.
             </p>
-
-            {/* Installation Command */}
-            <div className="max-w-2xl mx-auto mb-12">
-              <div className="bg-slate-900/80 backdrop-blur-sm border border-slate-700 rounded-xl p-1 shadow-2xl">
-                <div className="flex items-center justify-between px-4 py-2 border-b border-slate-700">
-                  <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                    <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                    <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                  </div>
-                  <span className="text-sm text-slate-500 font-mono">{selectedInstall.shell}</span>
-                </div>
-                <div className="flex items-center gap-3 p-4">
-                  <code className="flex-1 text-left text-rose-400 font-mono text-sm sm:text-base overflow-x-auto">
-                    {installCommand}
-                  </code>
-                  <button
-                    onClick={copyToClipboard}
-                    className="flex items-center gap-2 px-4 py-2 bg-rose-600 hover:bg-rose-500 text-white rounded-lg transition-all duration-200 hover:scale-105 active:scale-95 shadow-lg shadow-rose-600/20"
-                    title="Copy to clipboard"
-                  >
-                    {copied ? (
-                      <>
-                        <Check className="w-4 h-4" />
-                        <span className="hidden sm:inline">Copied!</span>
-                      </>
-                    ) : (
-                      <>
-                        <Copy className="w-4 h-4" />
-                        <span className="hidden sm:inline">Copy</span>
-                      </>
-                    )}
-                  </button>
-                </div>
-              </div>
-              <p className="text-sm text-slate-500 mt-3">
-                {selectedInstall.note}
-              </p>
-            </div>
-
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <div className="hero-actions">
+              <a className="button button--primary" href="#how">
+                See how it works <ArrowRight aria-hidden="true" />
+              </a>
               <a
+                className="button button--secondary"
                 href="https://github.com/guibeira/wakezilla"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={heroGithubRepositoryAriaLabel}
-                className="flex max-w-full flex-wrap items-center justify-center gap-x-2 gap-y-1 px-4 py-3 bg-white text-slate-900 font-semibold rounded-xl hover:bg-slate-100 transition-all duration-200 hover:scale-105 shadow-xl sm:gap-2 sm:px-8 sm:py-4"
               >
-                <Github className="w-5 h-5 flex-shrink-0" />
+                <Github aria-hidden="true" />
                 <span>View on GitHub</span>
-                <span className="flex basis-full items-center justify-center gap-1 text-sm text-slate-600 sm:basis-auto">
-                  <Star className="w-4 h-4" />
-                  {githubStarsLabel}
-                </span>
+                <span className="button__meta"><Star aria-hidden="true" /> {githubStarsLabel}</span>
               </a>
+            </div>
+            <div className="hero-trust" aria-label="Project highlights">
+              <span><CheckCircle2 aria-hidden="true" /> Open source</span>
+              <span><CheckCircle2 aria-hidden="true" /> MIT licensed</span>
+              <span><CheckCircle2 aria-hidden="true" /> Linux, macOS & Windows</span>
+            </div>
+          </div>
+
+          <LifecycleDiagram />
+        </section>
+
+        <section className="section-block page-width" aria-labelledby="why-heading">
+          <div className="split-heading">
+            <SectionHeading
+              eyebrow="THE ALWAYS-ON TAX"
+              title="Why keep it running?"
+              description="Most homelab services are used in bursts. Wakezilla lets the hardware follow demand instead of burning energy through the quiet hours."
+            />
+            <p className="split-heading__aside">
+              The service still feels available. The machine simply does not have to be awake before the first connection arrives.
+            </p>
+          </div>
+
+          <div className="comparison-grid">
+            <article className="comparison-card comparison-card--muted">
+              <div className="comparison-card__topline">
+                <span>WITHOUT WAKEZILLA</span>
+                <Power aria-hidden="true" />
+              </div>
+              <h3>Always on</h3>
+              <p>The server stays powered through long periods with no useful traffic.</p>
+              <div className="usage-chart usage-chart--always" aria-label="Server powered all day">
+                {Array.from({ length: 24 }, (_, index) => <span key={index} />)}
+              </div>
+              <footer><span>00:00</span><strong>24 hours powered</strong><span>24:00</span></footer>
+            </article>
+
+            <article className="comparison-card comparison-card--accent">
+              <div className="comparison-card__topline">
+                <span>WITH WAKEZILLA</span>
+                <Moon aria-hidden="true" />
+              </div>
+              <h3>Awake on demand</h3>
+              <p>Traffic wakes the target. Inactivity sends it back to sleep.</p>
+              <div className="usage-chart usage-chart--demand" aria-label="Server powered only during use">
+                {Array.from({ length: 24 }, (_, index) => <span key={index} />)}
+              </div>
+              <footer><span>00:00</span><strong>Power follows activity</strong><span>24:00</span></footer>
+            </article>
+          </div>
+        </section>
+
+        <section id="how" className="section-block section-block--panel">
+          <div className="page-width">
+            <SectionHeading
+              eyebrow="THE COMPLETE LOOP"
+              title="How Wakezilla works"
+              description="The request and response are only half the story. Wakezilla also keeps the target awake while traffic continues and closes the loop when activity stops."
+              align="center"
+            />
+
+            <ol className="process-grid">
+              {lifecycleSteps.map(({ number, title, description, icon: Icon }) => (
+                <li key={number}>
+                  <div className="process-grid__number">{number}</div>
+                  <Icon aria-hidden="true" />
+                  <h3>{title}</h3>
+                  <p>{description}</p>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
+
+        <section id="use-cases" className="section-block page-width">
+          <SectionHeading
+            eyebrow="USE THE BIG MACHINE WHEN IT MATTERS"
+            title="Built for real homelabs"
+            description="From movie night to local inference, keep occasional workloads reachable without keeping their hardware awake around the clock."
+          />
+
+          <div className="use-case-grid">
+            {useCases.map(({ icon: Icon, label, title, detail }, index) => (
+              <article key={label} className={`use-case-card use-case-card--${index + 1}`}>
+                <div className="use-case-card__icon"><Icon aria-hidden="true" /></div>
+                <span>{label}</span>
+                <h3>{title}</h3>
+                <p>{detail}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="section-block page-width configuration-section">
+          <div>
+            <SectionHeading
+              eyebrow="YOU SET THE RHYTHM"
+              title="Configure the lifecycle"
+              description="Register a machine, choose the ports Wakezilla should proxy, and decide how long it may remain idle."
+            />
+            <ul className="configuration-points">
+              <li><CheckCircle2 aria-hidden="true" /> Discover or add machines from the web interface.</li>
+              <li><CheckCircle2 aria-hidden="true" /> Set local and target ports for each service.</li>
+              <li><CheckCircle2 aria-hidden="true" /> Choose the inactivity period in minutes.</li>
+            </ul>
+          </div>
+
+          <div className="settings-card" aria-label="Example machine settings">
+            <div className="settings-card__bar">
+              <span>Machine settings</span>
+              <span className="status-pill"><span /> ONLINE</span>
+            </div>
+            <dl>
+              <div><dt>Name</dt><dd>media-server</dd></div>
+              <div><dt>IP address</dt><dd>192.168.1.42</dd></div>
+              <div><dt>MAC address</dt><dd>AA:BB:CC:DD:EE:FF</dd></div>
+              <div><dt>Port forward</dt><dd>8096 → 8096</dd></div>
+              <div className="settings-card__highlight"><dt>Inactivity period</dt><dd>30 minutes</dd></div>
+            </dl>
+            <p><TimerReset aria-hidden="true" /> Last request updates the idle timer automatically.</p>
+          </div>
+        </section>
+
+        <section id="install" className="section-block section-block--install">
+          <div className="page-width install-layout">
+            <div>
+              <SectionHeading
+                eyebrow="ONE COMMAND AWAY"
+                title="Install and start saving energy"
+                description="Install Wakezilla, run the guided setup, and register the machines that should wake on demand."
+              />
               <a
+                className="text-link"
                 href="https://github.com/guibeira/wakezilla#readme"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 px-8 py-4 text-slate-300 hover:text-white font-semibold rounded-xl transition-colors"
               >
-                Documentation
-                <ArrowRight className="w-4 h-4" />
+                Read the setup guide <ArrowRight aria-hidden="true" />
               </a>
             </div>
+            <InstallCommand
+              command={selectedInstall.command}
+              shell={selectedInstall.shell}
+              note={selectedInstall.note}
+              copied={copied}
+              onCopy={copyToClipboard}
+            />
           </div>
+        </section>
 
-          {/* How It Works Animation */}
-          <div className="mb-24">
-            <h2 className="text-3xl sm:text-4xl font-bold text-white text-center mb-4">
-              How It Works
-            </h2>
-            <p className="text-slate-400 text-center mb-12 max-w-2xl mx-auto">
-              Watch Wakezilla intelligently route your traffic and manage power automatically
-            </p>
-
-            <div className="relative bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-2xl p-8 overflow-hidden">
-              {/* Connection line */}
-              <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-gradient-to-r from-rose-500 via-red-500 to-orange-500 opacity-20"></div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-5 gap-4 sm:gap-2 relative">
-                {workflowSteps.map((step, index) => {
-                  const Icon = step.icon;
-                  const isActive = animationStep === index;
-                  const isPast = animationStep > index;
-
-                  return (
-                    <div key={index} className="flex flex-col items-center text-center relative">
-                      {/* Connector arrow (hidden on last item and mobile) */}
-                      {index < workflowSteps.length - 1 && (
-                        <div className="hidden sm:block absolute top-8 left-[60%] w-full h-0.5">
-                          <div
-                            className={`h-full transition-all duration-1000 ${
-                              isPast || isActive ? 'bg-gradient-to-r from-rose-500 to-red-500' : 'bg-slate-700'
-                            }`}
-                          ></div>
-                        </div>
-                      )}
-
-                      <div
-                        className={`relative z-10 w-16 h-16 rounded-xl flex items-center justify-center mb-4 transition-all duration-500 ${
-                          isActive
-                            ? 'bg-rose-500 shadow-lg shadow-rose-500/50 scale-110'
-                            : isPast
-                              ? 'bg-red-500/80'
-                              : 'bg-slate-700'
-                        }`}
-                      >
-                        <Icon className={`w-7 h-7 transition-colors duration-500 ${
-                          isActive || isPast ? 'text-white' : 'text-slate-400'
-                        }`} />
-
-                        {/* Pulse animation for active step */}
-                        {isActive && (
-                          <div className="absolute inset-0 rounded-xl bg-rose-500 animate-ping opacity-50"></div>
-                        )}
-                      </div>
-
-                      <h3 className={`font-semibold mb-1 transition-colors duration-300 ${
-                        isActive ? 'text-rose-400' : isPast ? 'text-red-400' : 'text-slate-300'
-                      }`}>
-                        {step.label}
-                      </h3>
-                      <p className="text-xs sm:text-sm text-slate-500 max-w-[120px]">
-                        {step.description}
-                      </p>
-                    </div>
-                  );
-                })}
-              </div>
-
-              {/* Progress indicator */}
-              <div className="flex justify-center gap-2 mt-8">
-                {workflowSteps.map((_, index) => (
-                  <div
-                    key={index}
-                    className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                      animationStep === index ? 'bg-rose-500 w-6' : 'bg-slate-600'
-                    }`}
-                  ></div>
-                ))}
-              </div>
-            </div>
+        <section className="section-block page-width open-source-section">
+          <div>
+            <SectionHeading
+              eyebrow="YOURS TO RUN, READ, AND IMPROVE"
+              title="Open source, by design"
+              description="Wakezilla is free to self-host, transparent to inspect, and shaped in public with its community."
+            />
+            <a
+              className="button button--secondary"
+              href="https://github.com/guibeira/wakezilla"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={githubRepositoryAriaLabel}
+            >
+              <Github aria-hidden="true" /> Explore the repository
+            </a>
           </div>
-
-          {/* Features Section */}
-          <div className="mb-24">
-            <h2 className="text-3xl sm:text-4xl font-bold text-white text-center mb-4">
-              Everything You Need
-            </h2>
-            <p className="text-slate-400 text-center mb-12 max-w-2xl mx-auto">
-              A complete toolkit for managing remote machines with intelligent automation
-            </p>
-
-            <div className="grid md:grid-cols-3 gap-6">
-              {features.map((feature, index) => {
-                const Icon = feature.icon;
-                return (
-                  <div
-                    key={index}
-                    className="group relative bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-2xl p-8 hover:border-rose-500/50 transition-all duration-300 hover:scale-105 cursor-default"
-                  >
-                    <div className="absolute inset-0 bg-gradient-to-br from-rose-500/5 to-orange-500/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
-
-                    <div className="relative">
-                      <div className="w-14 h-14 bg-gradient-to-br from-rose-500 to-orange-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                        <Icon className="w-7 h-7 text-white" />
-                      </div>
-
-                      <h3 className="text-xl font-bold text-white mb-3">
-                        {feature.title}
-                      </h3>
-                      <p className="text-slate-400 leading-relaxed">
-                        {feature.description}
-                      </p>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
+          <div className="project-stats">
+            <div><strong>100%</strong><span>Open Source</span></div>
+            <div><strong>{githubStarsValue}</strong><span>GitHub Stars</span></div>
+            <div><strong>MIT</strong><span>Licensed</span></div>
           </div>
+        </section>
 
-          {/* Use Cases Section */}
-          <div className="mb-24">
-            <h2 className="text-3xl sm:text-4xl font-bold text-white text-center mb-12">
-              Perfect For
-            </h2>
-
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              {[
-                { icon: Server, label: 'Homelabs', desc: 'Self-hosted services on demand' },
-                { icon: Monitor, label: 'Media Servers', desc: 'Wake Plex for movie night' },
-                { icon: Timer, label: 'Development', desc: 'Spin up dev servers when needed' },
-                { icon: Power, label: 'Energy Saving', desc: 'Cut power bills automatically' },
-              ].map((item, index) => {
-                const Icon = item.icon;
-                return (
-                  <div
-                    key={index}
-                    className="flex items-start gap-4 bg-slate-800/30 backdrop-blur-sm border border-slate-700 rounded-xl p-6 hover:border-rose-500/30 transition-colors"
-                  >
-                    <div className="w-10 h-10 bg-slate-700 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <Icon className="w-5 h-5 text-rose-400" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-white mb-1">{item.label}</h3>
-                      <p className="text-sm text-slate-500">{item.desc}</p>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
+        <section className="final-cta page-width">
+          <img src={wakezillaLogo} alt="" />
+          <p className="section-kicker">THE NEXT REQUEST CAN WAKE IT</p>
+          <h2>Let your server sleep.</h2>
+          <p>Keep the service available without keeping the machine awake.</p>
+          <div className="hero-actions">
+            <a className="button button--primary" href="#install">
+              Install Wakezilla <ArrowRight aria-hidden="true" />
+            </a>
+            <a
+              className="button button--secondary"
+              href="https://github.com/guibeira/wakezilla#readme"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Documentation
+            </a>
           </div>
-
-          {/* Stats Section */}
-          <div className="bg-gradient-to-r from-rose-500/10 via-red-500/10 to-orange-500/10 border border-slate-700 rounded-2xl p-8 sm:p-12 mb-24">
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
-              <div>
-                <div className="text-4xl sm:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-rose-400 to-red-400 mb-2">
-                  100%
-                </div>
-                <div className="text-slate-400">Open Source</div>
-              </div>
-              <div>
-                <div className="text-4xl sm:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-orange-400 mb-2">
-                  Rust
-                </div>
-                <div className="text-slate-400">Built for Performance</div>
-              </div>
-              <div>
-                <div className="text-4xl sm:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-rose-400 mb-2">
-                  {githubStarsValue}
-                </div>
-                <div className="text-slate-400">GitHub Stars</div>
-              </div>
-              <div>
-                <div className="text-4xl sm:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-rose-400 mb-2">
-                  MIT
-                </div>
-                <div className="text-slate-400">Licensed</div>
-              </div>
-            </div>
-          </div>
-
-          {/* Final CTA */}
-          <div className="text-center">
-            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
-              Ready to Wake Your Machines?
-            </h2>
-            <p className="text-slate-400 mb-8 max-w-xl mx-auto">
-              Get started in seconds with a single command. No complex setup required.
-            </p>
-            <div className="inline-flex w-full max-w-2xl flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 bg-slate-800/80 backdrop-blur-sm border border-slate-700 rounded-xl p-2">
-              <code className="min-w-0 flex-1 overflow-x-auto px-4 py-2 text-left text-rose-400 font-mono text-sm sm:text-base">
-                {installCommand}
-              </code>
-              <button
-                onClick={copyToClipboard}
-                className="flex items-center justify-center gap-2 px-4 py-2 bg-rose-600 hover:bg-rose-500 text-white rounded-lg transition-colors"
-              >
-                {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-                {copied ? 'Copied!' : 'Copy'}
-              </button>
-            </div>
-          </div>
-        </div>
+        </section>
       </main>
 
-      {/* Footer */}
-      <footer className="relative z-10 border-t border-slate-800 px-6 py-8">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <img
-              src={wakezillaLogo}
-              alt="Wakezilla"
-              className="w-8 h-8 object-contain"
-            />
-            <span className="text-lg font-semibold text-white">Wakezilla</span>
-          </div>
-
-          <div className="flex items-center gap-6">
+      <footer className="site-footer">
+        <div className="page-width site-footer__inner">
+          <a className="brand" href="#top">
+            <img src={wakezillaLogo} alt="" />
+            <span>Wakezilla</span>
+          </a>
+          <p>On-demand power for the modern homelab.</p>
+          <div>
             <a
               href="https://github.com/guibeira/wakezilla"
               target="_blank"
               rel="noopener noreferrer"
               aria-label={githubRepositoryAriaLabel}
-              className="text-slate-400 hover:text-white transition-colors flex items-center gap-2"
             >
-              <Github className="w-5 h-5" />
-              <span>GitHub</span>
+              GitHub
             </a>
             <a
               href="https://github.com/guibeira/wakezilla#readme"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-slate-400 hover:text-white transition-colors"
             >
               Documentation
             </a>
-          </div>
-
-          <div className="text-slate-500 text-sm">
-            Made with care by{' '}
-            <a
-              href="https://github.com/guibeira"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-slate-400 hover:text-white transition-colors"
-            >
+            <a href="https://github.com/guibeira" target="_blank" rel="noopener noreferrer">
               @guibeira
             </a>
           </div>
