@@ -351,10 +351,6 @@ function App() {
               height="750"
               loading="lazy"
             />
-            <figcaption>
-              <span><span /> ACTUAL PRODUCT</span>
-              <p>Actual Wakezilla web interface. Every new connection resets the inactivity timer.</p>
-            </figcaption>
           </figure>
         </section>
 
