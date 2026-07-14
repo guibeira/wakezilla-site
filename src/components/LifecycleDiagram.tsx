@@ -149,7 +149,7 @@ export function LifecycleDiagram() {
         <div className="min-w-0 flex-1">
           <div className="flex items-center justify-between gap-3">
             <span>Idle timeout</span>
-            <code>N min</code>
+            <code>60 minutes</code>
           </div>
           <div className="idle-panel__track"><span /></div>
         </div>
@@ -157,7 +157,7 @@ export function LifecycleDiagram() {
       </div>
 
       <p className="idle-note">
-        Every new request resets the idle timer. After N minutes without activity, Wakezilla powers the target down.
+        Every new request resets the idle timer. After 60 minutes without activity, Wakezilla powers the target down.
       </p>
 
       <ol className="lifecycle-timeline" aria-label="Lifecycle stages">

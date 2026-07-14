@@ -98,6 +98,8 @@ describe('App lifecycle explanation', () => {
     expect(screen.getAllByText('200 OK').length).toBeGreaterThan(0);
     expect(screen.getAllByText(/every new request resets the idle timer/i).length).toBeGreaterThan(0);
     expect(screen.getAllByText(/after .* without activity.*powers.*down/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/60 minutes/i).length).toBeGreaterThan(0);
+    expect(screen.queryByText(/^N min$/i)).not.toBeInTheDocument();
   });
 
   it('keeps every lifecycle stage understandable without animation', () => {

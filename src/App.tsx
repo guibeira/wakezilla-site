@@ -215,7 +215,7 @@ function App() {
             </h1>
             <p className="hero-copy__description">
               Wakezilla wakes your target, proxies the request, and returns the response.
-              After N minutes without activity, Wakezilla powers the target down automatically.
+              After 60 minutes without activity, Wakezilla powers the target down automatically.
             </p>
             <div className="hero-actions">
               <a className="button button--primary" href="#how">
