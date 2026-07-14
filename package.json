@@ -1,15 +1,23 @@
 {
-  "name": "vite-react-typescript-starter",
+  "name": "wakezilla-site",
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "workspaces": [
+    "docs"
+  ],
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "dev:docs": "npm run dev --workspace=docs",
+    "build": "npm run build:site && npm run build:docs",
+    "build:site": "vite build",
+    "build:docs": "npm run build --workspace=docs && npm run verify:docs",
     "lint": "eslint .",
     "preview": "vite preview",
+    "preview:docs": "npm run preview --workspace=docs",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit -p tsconfig.app.json"
+    "typecheck": "tsc --noEmit -p tsconfig.app.json",
+    "verify:docs": "node scripts/verify-docs-build.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.57.4",

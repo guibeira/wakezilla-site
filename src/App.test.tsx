@@ -163,3 +163,24 @@ describe('App lifecycle explanation', () => {
     expect(screen.queryByLabelText(/example machine settings/i)).not.toBeInTheDocument();
   });
 });
+
+describe('App documentation links', () => {
+  it('links navigation and documentation calls to /docs/', () => {
+    const fetchMock = vi.fn(() => new Promise<Response>(() => {}));
+    vi.stubGlobal('fetch', fetchMock);
+
+    render(<App />);
+
+    expect(screen.getByRole('link', { name: 'Docs' })).toHaveAttribute('href', '/docs/');
+    expect(screen.getByRole('link', { name: /read the setup guide/i })).toHaveAttribute(
+      'href',
+      '/docs/',
+    );
+
+    const documentationLinks = screen.getAllByRole('link', { name: 'Documentation' });
+    expect(documentationLinks).not.toHaveLength(0);
+    documentationLinks.forEach((link) => {
+      expect(link).toHaveAttribute('href', '/docs/');
+    });
+  });
+});
