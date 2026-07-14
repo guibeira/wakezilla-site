@@ -154,7 +154,7 @@ describe('App lifecycle explanation', () => {
     render(<App />);
 
     expect(
-      screen.getByRole('img', { name: /wakezilla web interface.*port forwards/i }),
+      screen.getByRole('img', { name: /wakezilla web interface.*expanded port forward fields/i }),
     ).toBeInTheDocument();
     expect(screen.getByText(/actual Wakezilla web interface/i)).toBeInTheDocument();
     expect(screen.queryByLabelText(/example machine settings/i)).not.toBeInTheDocument();
