@@ -76,7 +76,7 @@ wakezilla-v1
 <nonce>
 ```
 
-It sends the payload fields and resulting signature in these headers:
+It sends the timestamp, nonce, and resulting signature in these headers:
 
 - `x-wakezilla-timestamp`;
 - `x-wakezilla-nonce`;
