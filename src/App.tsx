@@ -187,6 +187,7 @@ function App() {
             <a href="#how">How it works</a>
             <a href="#use-cases">Use cases</a>
             <a href="#install">Install</a>
+            <a href="/docs/">Docs</a>
           </div>
 
           <a
@@ -364,9 +365,7 @@ function App() {
               />
               <a
                 className="text-link"
-                href="https://github.com/guibeira/wakezilla#readme"
-                target="_blank"
-                rel="noopener noreferrer"
+                href="/docs/"
               >
                 Read the setup guide <ArrowRight aria-hidden="true" />
               </a>
@@ -416,9 +415,7 @@ function App() {
             </a>
             <a
               className="button button--secondary"
-              href="https://github.com/guibeira/wakezilla#readme"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="/docs/"
             >
               Documentation
             </a>
@@ -443,9 +440,7 @@ function App() {
               GitHub
             </a>
             <a
-              href="https://github.com/guibeira/wakezilla#readme"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="/docs/"
             >
               Documentation
             </a>
