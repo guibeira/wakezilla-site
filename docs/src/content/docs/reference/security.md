@@ -29,9 +29,17 @@ If remote browser access is required, put Wakezilla behind a reverse proxy or pr
 
 ## Secure remote power
 
-For each newly registered remote-power machine, the proxy generates a unique random 256-bit key. The dashboard places that key in the target's `wakezilla setup --mode client --key ...` command. Once paired, the proxy signs the method, path, timestamp, and nonce of each secure health and shutdown request with HMAC-SHA256.
+For each newly registered remote-power machine, the proxy generates a unique random 256-bit key. The dashboard places that key in the target's `wakezilla setup --mode client --key ...` command. Once paired, the proxy signs this exact newline-delimited payload with HMAC-SHA256:
 
-The client rejects invalid signatures, timestamps more than 60 seconds outside its clock, and recently reused nonces. This prevents an unauthenticated caller from scheduling the platform power action and prevents a captured valid request from being replayed.
+```text
+wakezilla-v1
+<UPPERCASE_METHOD>
+<path>
+<timestamp>
+<nonce>
+```
+
+The client rejects invalid signatures, timestamps more than 60 seconds outside its clock, and recently reused nonces. This blocks unauthenticated direct requests to the client and prevents a captured valid request from being replayed. It does not authenticate callers to the proxy API, which can still request a signed shutdown on their behalf.
 
 The public `/health` endpoint does not trigger a power action and remains unsigned for availability reporting. The `/health/secure` and `/machines/turn-off` endpoints require signed requests after a key is configured.
 

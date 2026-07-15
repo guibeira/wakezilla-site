@@ -66,7 +66,17 @@ The dashboard only shows **Turn off machine** for `legacy` and `verified` client
 
 ## How requests are authenticated
 
-For each secure health or shutdown request, the proxy creates a timestamp and a random nonce, then signs the request method, path, timestamp, and nonce with the machine key. It sends the signature in these headers:
+For each secure health or shutdown request, the proxy creates a timestamp and a random nonce. It signs this exact newline-delimited payload with the machine key:
+
+```text
+wakezilla-v1
+<UPPERCASE_METHOD>
+<path>
+<timestamp>
+<nonce>
+```
+
+It sends the payload fields and resulting signature in these headers:
 
 - `x-wakezilla-timestamp`;
 - `x-wakezilla-nonce`;
