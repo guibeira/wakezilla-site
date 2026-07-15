@@ -75,10 +75,27 @@ wakezilla tui --api-url http://192.168.1.10:3000
 ## `setup`
 
 ```sh
-wakezilla setup [--mode proxy|client] [--port <PORT>] [-y|--yes]
+wakezilla setup [--mode proxy|client] [--port <PORT>] [--key <KEY>] [-y|--yes]
 ```
 
-Providing both `--mode` and `--port` skips the interactive selector. `--yes` skips confirmation when Wakezilla detects an existing configuration or service. Elevated privileges are required.
+| Option | Effect |
+| --- | --- |
+| `--mode proxy\|client` | Select the service role without the interactive selector |
+| `--port <PORT>` | Set the listener used by the installed service |
+| `--key <KEY>` | Configure the client shutdown key; valid only with `--mode client` |
+| `-y, --yes` | Skip confirmation when Wakezilla detects an existing configuration or service |
+
+Providing both `--mode` and `--port` skips the interactive selector. Elevated privileges are required.
+
+The proxy dashboard generates the recommended client command after a remote-power machine is registered:
+
+```sh
+sudo wakezilla setup --mode client --port 3001 --key <generated-key> --yes
+```
+
+The key must be URL-safe base64 that decodes to exactly 32 bytes. Treat the complete command as a secret. On Windows, run it from an Administrator terminal without `sudo`.
+
+See [Secure Shutdown](../guides/secure-shutdown/) for the pairing and rotation workflow.
 
 ## `service`
 

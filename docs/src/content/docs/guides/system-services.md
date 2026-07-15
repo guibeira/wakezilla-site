@@ -21,13 +21,15 @@ wakezilla setup
 
 Choose **Proxy** for the machine that remains available and **Client** for a target that accepts remote power requests. The wizard then asks for the listening port.
 
+For a remotely managed client, prefer the generated command on the machine detail page. It includes the per-machine shutdown key and lets the dashboard verify the client automatically.
+
 ## Install without prompts
 
 Provide the mode and port together:
 
 ```sh
 sudo wakezilla setup --mode proxy --port 3000
-sudo wakezilla setup --mode client --port 3001
+sudo wakezilla setup --mode client --port 3001 --key <generated-key>
 ```
 
 Add `--yes` when automation should overwrite an existing Wakezilla configuration without confirmation:
@@ -37,6 +39,8 @@ sudo wakezilla setup --mode proxy --port 3000 --yes
 ```
 
 Reconfiguring one mode preserves the other mode's port in `config.toml`.
+
+`--key` is valid only for client mode. The dashboard-generated key is URL-safe base64 that decodes to 32 bytes. Treat the command as a credential and see [Secure Shutdown](./secure-shutdown/) for the complete workflow.
 
 ## What setup installs
 
@@ -80,6 +84,8 @@ See [Logs](../help/logs/) for platform locations and direct service-manager comm
 sudo wakezilla setup --mode proxy --port 3000 --yes
 sudo wakezilla setup --mode client --port 3001 --yes
 ```
+
+Rerunning client setup without `--key` preserves an existing shutdown key in `config.toml`.
 
 ## Remove services
 

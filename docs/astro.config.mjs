@@ -35,6 +35,7 @@ export default defineConfig({
           label: 'Guides',
           items: [
             { label: 'Web Dashboard', slug: 'guides/web-dashboard' },
+            { label: 'Secure Shutdown', slug: 'guides/secure-shutdown' },
             { label: 'Machines', slug: 'configuration/machines' },
             { label: 'Port Forwarding', slug: 'configuration/port-forwarding' },
             { label: 'Inactivity Timeout', slug: 'configuration/inactivity-timeout' },

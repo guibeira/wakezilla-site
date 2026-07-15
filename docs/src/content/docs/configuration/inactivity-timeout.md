@@ -40,9 +40,10 @@ Automatic shutdown requires:
 
 - remote shutdown enabled for the machine;
 - the Wakezilla client running on the target;
+- secure shutdown verified for a newly configured client, or a legacy client still available during migration;
 - the correct turn-off port, normally `3001`;
 - network access from the proxy to the client endpoint.
 
 The final operating-system action is suspend with shutdown fallback on Linux, shutdown on macOS, and hibernate on Windows. Test that Wake-on-LAN can restore the target from its resulting power state.
 
-See [Known Limitations](../help/known-limitations/#one-remote-power-attempt-per-activity-window) for retry behavior and default differences.
+See [Secure Shutdown](../guides/secure-shutdown/) for client pairing and [Known Limitations](../help/known-limitations/#one-remote-power-attempt-per-activity-window) for retry behavior and default differences.

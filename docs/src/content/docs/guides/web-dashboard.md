@@ -33,12 +33,14 @@ The form starts with one empty forward. Fill its service name, local port, and t
 
 The current creation form uses an inactivity period of `60` minutes but does not display that field. After creating the machine, open its detail page to review or change the value.
 
+When remote power is enabled for a new machine, Wakezilla creates a unique shutdown key and opens the detail page so you can finish pairing the target client.
+
 ## Machine list
 
 The dashboard table shows the machine address, description, client port, remote power setting, status, and forwards. Its actions can:
 
 - send Wake-on-LAN immediately;
-- request the target-side power action when configured;
+- request the target-side power action after the client is configured;
 - delete the machine after confirmation.
 
 Select the machine name to open its detail page.
@@ -59,10 +61,19 @@ The MAC address identifies the record and is displayed as read-only on this page
 
 **Wake machine** sends the configured number of magic packets immediately. It does not wait for the machine to become reachable.
 
-**Turn off machine** sends a request to the client port. The button is disabled until remote power is enabled and a port is configured. Platform behavior differs; see [Platform Behavior](../reference/platform-behavior/).
+For a new machine with remote power enabled, **Finish setting up your client server** appears at the top of the detail page. It shows two steps for Linux/macOS and Windows:
+
+1. Install Wakezilla on the target, if needed.
+2. Run the generated `wakezilla setup --mode client --key ...` command with administrator privileges.
+
+Each **Copy command** button briefly changes to **Copied!** after a successful copy. The page checks the client's authenticated health endpoint automatically and reports whether setup is pending, verified, unreachable, or using a different key.
+
+**Turn off machine** is hidden for a new client until secure setup is verified. It sends an authenticated request to the client port once available. Legacy clients keep the control while they are migrated and show a **Secure now** action. A verified client offers **Reconfigure security** to rotate its key.
+
+See [Secure Shutdown](./secure-shutdown/) for the pairing flow and [Platform Behavior](../reference/platform-behavior/) for the action performed on each operating system.
 
 ## Access history
 
 The detail page charts accepted proxy connections for every configured forward. Switch between daily, weekly, and hourly buckets or choose **Refresh** to fetch the latest persisted data.
 
-The raw machine JSON at the bottom is a diagnostic view of the API record. Treat it as potentially sensitive because it includes internal addresses and ports.
+When Wakezilla is compiled with its debug feature, the page also includes a raw machine JSON diagnostic view. Production builds hide this section. Treat debug output as potentially sensitive because it includes internal addresses and ports.

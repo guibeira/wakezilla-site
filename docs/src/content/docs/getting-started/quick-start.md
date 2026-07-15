@@ -1,9 +1,9 @@
 ---
 title: Quick Start
-description: Install the proxy and client services with wakezilla setup, then forward your first port.
+description: Install the proxy, securely pair a target client, and forward your first port.
 ---
 
-The fastest way to start Wakezilla is the interactive `wakezilla setup` wizard. Run it once on the machine that stays online as the proxy, then run it again on the target machine as the client. The wizard writes the system configuration, installs a boot-time service, starts it, and checks that its port is reachable.
+The fastest way to start Wakezilla is to configure the proxy with `wakezilla setup`, register the target in the dashboard, and run the generated secure client command. The setup process writes the system configuration, installs a boot-time service, starts it, and checks that its port is reachable.
 
 ## What you need
 
@@ -46,25 +46,57 @@ On Windows, run the command from an elevated PowerShell without `sudo`.
 
 Open `http://<proxy-ip>:3000`. The dashboard should load before you continue. If you selected a different port, replace `3000` in the URL.
 
-## 3. Configure the target client
+## 3. Install Wakezilla on the target
 
-On the machine Wakezilla will wake and later return to its platform power state, run the same wizard:
-
-```sh
-sudo wakezilla setup
-```
-
-Choose **Client server**, keep its default port `3001`, and confirm the configuration. On Windows, use an elevated PowerShell without `sudo`.
-
-From the proxy machine, verify the target-side client:
+On Linux or macOS, run:
 
 ```sh
-curl http://<target-ip>:3001/health
+curl -fsSL https://wakezilla.dev/install.sh | sh
 ```
 
-The endpoint returns `{"status":"ok"}`. Allow TCP `3001` only between the proxy and target; it exposes the remote power operation without application-level authentication.
+On Windows, open PowerShell as Administrator and run:
 
-## 4. Use the tray on a graphical desktop
+```powershell
+irm https://wakezilla.dev/install.ps1 | iex
+```
+
+Do not configure the client service yet. The dashboard will generate a per-machine key and the complete command after you register the target.
+
+## 4. Register the target machine
+
+In the proxy dashboard, add a machine manually or select one from the network scanner. Enter:
+
+- a recognizable name;
+- the target machine's IP address;
+- its Wake-on-LAN MAC address;
+- turn-off port `3001`;
+- **Allow remote turn off** enabled.
+
+The creation form already contains **Forward 1**. Enter:
+
+- **Service name:** an optional label such as `media`;
+- **Local Port:** the port accepted by the proxy, such as `8096`;
+- **Target Port:** the service port on the target machine, such as `8096`.
+
+Save the machine. Wakezilla opens its detail page and displays **Finish setting up your client server** at the top.
+
+## 5. Pair the target client
+
+The setup card generates the complete configuration command for each platform, including the machine's shutdown key. You do not need to create, type, or replace the key manually.
+
+![Machine setup card with generated installation and secure client configuration commands for Linux, macOS, and Windows](/docs/images/secure-shutdown-setup.png)
+
+Since Wakezilla is already installed, choose **Copy command** beside **2. Configure the client server** and run it on the target with administrator privileges. On Windows, use the command displayed under **Windows (Administrator terminal)**.
+
+The detail page verifies the key automatically. When the client is paired, it reports that shutdown requests are authenticated and shows **Turn off machine**. Allow TCP `3001` only between the proxy and target.
+
+:::caution
+The generated command contains the machine's shutdown credential. Treat it as a secret and restrict access to the dashboard while it is visible.
+:::
+
+See [Secure Shutdown](../guides/secure-shutdown/) for verification states, legacy migration, key rotation, and troubleshooting.
+
+## 6. Use the tray on a graphical desktop
 
 Release installers include the Wakezilla tray application. When a graphical desktop session is available, the installer requests an immediate tray launch or configures it for the next graphical login.
 
@@ -84,29 +116,11 @@ Headless servers do not show a tray icon. This does not affect the proxy or clie
 
 See [Desktop Tray](../guides/desktop-tray/) for the complete menu and platform requirements.
 
-## 5. Register the target machine
-
-In the proxy dashboard, add a machine manually or select one from the network scanner. Enter:
-
-- a recognizable name;
-- the target machine's IP address;
-- its Wake-on-LAN MAC address;
-- turn-off port `3001`;
-- **Allow remote turn off** enabled.
-
-The creation form already contains **Forward 1**. Enter:
-
-- **Service name:** an optional label such as `media`;
-- **Local Port:** the port accepted by the proxy, such as `8096`;
-- **Target Port:** the service port on the target machine, such as `8096`.
-
-Save the machine.
-
-## 6. Confirm the inactivity period
+## 7. Confirm the inactivity period
 
 The creation form uses `60` minutes but does not display the field. After saving, Wakezilla opens the machine detail page. Confirm that **Inactivity Period (minutes)** is `60`, then choose **Save changes** if you modify it.
 
-## 7. Send traffic through Wakezilla
+## 8. Send traffic through Wakezilla
 
 Connect to `<proxy-ip>:8096`. If the target is sleeping, Wakezilla sends the wake packet and waits for the service. It then forwards the request to the target and forwards the response back to the caller.
 

@@ -28,7 +28,7 @@ The current web interface defaults new machine records to **60 minutes**. With t
 - the connection is accepted and the timer is refreshed;
 - traffic and responses continue in both directions;
 - the connection eventually closes;
-- if no new connection is accepted for 60 minutes, the proxy sends one remote power request to the Wakezilla client.
+- if no new connection is accepted for 60 minutes, the proxy sends one signed remote power request to a paired Wakezilla client.
 
 The inactivity timer is per target IP and is initialized when a configured port forward starts. A machine without a port forward is not monitored for inactivity. Changing a machine's configuration restarts the global monitor with the new settings.
 
@@ -39,6 +39,8 @@ The client waits five seconds, then performs the platform action: suspend with s
 | Component | Default web port | Responsibility |
 | --- | ---: | --- |
 | Proxy server | `3000` | Dashboard, API, Wake-on-LAN, service-port checks, TCP forwarding, history, and inactivity monitoring |
-| Client server | `3001` | Health endpoint and remote platform power request |
+| Client server | `3001` | Public health, authenticated secure health, and remote platform power request |
 
 The client is required for dashboard status and remote power actions. Direct Wake-on-LAN and port forwarding are handled by the proxy server.
+
+See [Secure Shutdown](../guides/secure-shutdown/) for how the proxy and client establish their per-machine key.

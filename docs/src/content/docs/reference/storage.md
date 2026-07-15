@@ -3,12 +3,13 @@ title: Storage and Backups
 description: Locate, back up, restore, and remove Wakezilla machine and access-history data.
 ---
 
-Wakezilla persists machine configuration and access history as JSON files.
+Wakezilla persists machine configuration and access history as JSON files. Client service configuration is stored separately in `config.toml`.
 
 | File | Contents |
 | --- | --- |
-| `machines.json` | Machines, MAC and IP addresses, remote power settings, inactivity periods, and port forwards |
+| `machines.json` | Machines, MAC and IP addresses, remote power settings, shutdown keys and verification state, inactivity periods, and port forwards |
 | `access_history.json` | Accepted connection timestamps grouped by machine and local port |
+| `config.toml` | Service settings and, on a paired client, `security.client_shutdown_key` |
 
 ## Foreground processes
 
@@ -44,6 +45,10 @@ The proxy writes access history every 60 seconds and once more during graceful s
 
 ## Back up
 
+:::caution
+Backups of `machines.json` or a paired client's `config.toml` contain shutdown credentials. Encrypt the backup, restrict access to it, and never publish these files with diagnostic bundles.
+:::
+
 1. Stop the proxy or system service so files do not change during the copy.
 2. Copy `config.toml`, `machines.json`, and `access_history.json` to the backup location.
 3. Start the proxy again.
@@ -62,6 +67,8 @@ sudo wakezilla service start --mode proxy
 2. Restore the files to the paths declared by the configuration.
 3. Preserve ownership and permissions required by the service manager.
 4. Start the proxy and inspect its logs for parsing errors.
+
+After restoring a client or proxy from different points in time, the stored keys may no longer match. Open the machine detail page, choose **Reconfigure security** if necessary, run the current command on the target, and wait for verification.
 
 ## Uninstall behavior
 

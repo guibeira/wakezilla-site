@@ -39,6 +39,8 @@ The status indicator has the same semantics as the dashboard: it checks the targ
 
 The TUI does not add authentication. Anyone who can reach the proxy API can perform the same operations. Use a private network, VPN, or authenticated gateway when running it from another host.
 
+Secure client pairing is managed in the web dashboard. The TUI does not display setup commands or verification state. Its `t` action asks the proxy to send the request; a pending, unreachable, or mismatched client can reject or fail that request. Complete [Secure Shutdown](./secure-shutdown/) in the dashboard first.
+
 ## Troubleshooting
 
 If the TUI cannot load machines, verify the base URL directly:
