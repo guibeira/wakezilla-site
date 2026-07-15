@@ -8,7 +8,7 @@ export default defineConfig({
   integrations: [
     starlight({
       title: 'Wakezilla',
-      description: 'Wake, route, and power down your machines automatically.',
+      description: 'Wake machines on demand, proxy TCP traffic, and return them to a low-power state after inactivity.',
       favicon: '/favicon.svg',
       customCss: ['./src/styles/custom.css'],
       components: {
@@ -32,16 +32,37 @@ export default defineConfig({
           ],
         },
         {
-          label: 'Configuration',
+          label: 'Guides',
           items: [
+            { label: 'Web Dashboard', slug: 'guides/web-dashboard' },
             { label: 'Machines', slug: 'configuration/machines' },
             { label: 'Port Forwarding', slug: 'configuration/port-forwarding' },
             { label: 'Inactivity Timeout', slug: 'configuration/inactivity-timeout' },
+            { label: 'Network Scanner', slug: 'guides/network-scanner' },
+            { label: 'System Services', slug: 'guides/system-services' },
+            { label: 'Terminal UI', slug: 'guides/terminal-ui' },
+            { label: 'Desktop Tray', slug: 'guides/desktop-tray' },
+          ],
+        },
+        {
+          label: 'Reference',
+          items: [
+            { label: 'CLI', slug: 'reference/cli' },
+            { label: 'Configuration', slug: 'reference/configuration' },
+            { label: 'Storage and Backups', slug: 'reference/storage' },
+            { label: 'HTTP API', slug: 'reference/http-api' },
+            { label: 'Platform Behavior', slug: 'reference/platform-behavior' },
+            { label: 'Security', slug: 'reference/security' },
           ],
         },
         {
           label: 'Help',
-          items: [{ label: 'Troubleshooting', slug: 'help/troubleshooting' }],
+          items: [
+            { label: 'Logs', slug: 'help/logs' },
+            { label: 'Updates and Uninstall', slug: 'help/updates-uninstall' },
+            { label: 'Known Limitations', slug: 'help/known-limitations' },
+            { label: 'Troubleshooting', slug: 'help/troubleshooting' },
+          ],
         },
       ],
     }),
