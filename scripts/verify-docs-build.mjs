@@ -51,6 +51,22 @@ await assertExists(
   path.join(docsRoot, 'images/machine-detail.png'),
   'The dashboard guide must include the machine detail screenshot.',
 );
+await assertExists(
+  path.join(docsRoot, 'images/setup-select-mode.png'),
+  'The quick start must include the setup mode screenshot.',
+);
+await assertExists(
+  path.join(docsRoot, 'images/setup-proxy-port.png'),
+  'The quick start must include the setup port screenshot.',
+);
+await assertExists(
+  path.join(docsRoot, 'images/setup-confirm.png'),
+  'The quick start must include the setup confirmation screenshot.',
+);
+await assertExists(
+  path.join(docsRoot, 'images/tray-icon.png'),
+  'The quick start must include the tray icon.',
+);
 
 const docsHome = await readFile('dist/docs/index.html', 'utf8');
 const quickStart = await readFile(
@@ -77,6 +93,16 @@ assert.match(
   quickStart,
   /60 minutes/,
   'The quick start must describe the 60-minute inactivity period.',
+);
+assert.match(
+  quickStart,
+  /wakezilla setup/,
+  'The quick start must lead with the interactive setup wizard.',
+);
+assert.match(
+  quickStart,
+  /Headless servers do not show a tray icon/,
+  'The quick start must explain when the tray icon is unavailable.',
 );
 
 const generatedFiles = await walk(docsRoot);
