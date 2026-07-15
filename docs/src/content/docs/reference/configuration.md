@@ -37,6 +37,9 @@ packet_sleeptime_ms = 50
 machines_db_path = "machines.json"
 access_history_path = "access_history.json"
 max_access_records = 2000
+
+[security]
+# client_shutdown_key = "<generated-key>"
 ```
 
 | TOML key | Environment variable | Default | Effect |
@@ -50,8 +53,15 @@ max_access_records = 2000
 | `storage.machines_db_path` | `WAKEZILLA__STORAGE__MACHINES_DB_PATH` | `machines.json` | Machine database location |
 | `storage.access_history_path` | `WAKEZILLA__STORAGE__ACCESS_HISTORY_PATH` | `access_history.json` | Access history location |
 | `storage.max_access_records` | `WAKEZILLA__STORAGE__MAX_ACCESS_RECORDS` | `2000` | Records retained per forwarded service |
+| `security.client_shutdown_key` | `WAKEZILLA__SECURITY__CLIENT_SHUTDOWN_KEY` | unset | Per-machine HMAC key accepted by a target client |
 
 Paths may be absolute or relative. Relative paths are resolved from the process working directory.
+
+The dashboard-generated client setup command writes `security.client_shutdown_key` automatically. The value must be URL-safe base64 that decodes to exactly 32 bytes. A client with no key keeps legacy unsigned shutdown behavior for backward compatibility.
+
+:::caution
+The shutdown key is a credential. Do not commit `config.toml`, paste the key into logs, or share a generated setup command. Rotate the key from the machine detail page if it may have been exposed.
+:::
 
 ## Declared but not currently applied
 

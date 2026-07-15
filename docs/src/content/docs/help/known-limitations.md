@@ -52,6 +52,12 @@ Several related configuration keys are declared but do not currently replace the
 
 Dashboard and TUI status call the client `/health` endpoint, using the configured remote power port or `3001`. They do not test general host reachability or a forwarded application port.
 
+## Secure shutdown onboarding is web-only
+
+The web dashboard shows generated client commands, verifies the shared key, and hides its shutdown control until a new client is verified. The TUI does not display that onboarding state and can still ask the proxy to turn off a selected machine while setup is pending. The client may reject or fail the request.
+
+Complete secure setup in the machine detail page before using the TUI's `t` action. This does not weaken a configured client's HMAC validation.
+
 ## Windows network scanning
 
 Windows builds do not provide ARP scanning. Manual registration, Wake-on-LAN, forwarding, the client, services, TUI, tray, and updates remain supported.

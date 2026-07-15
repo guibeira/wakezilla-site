@@ -19,7 +19,7 @@ Wakezilla supports Linux, macOS, and Windows, but operating-system integrations 
 
 ## Remote power behavior
 
-The client waits five seconds after accepting a remote power request.
+The client waits five seconds after accepting a remote power request. A paired client first validates the request signature, timestamp, and nonce; invalid requests never schedule the platform action.
 
 - Linux runs `systemctl suspend`. If suspend fails, it runs `shutdown -h now`.
 - macOS asks System Events to shut down the computer.

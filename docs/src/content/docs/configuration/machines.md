@@ -26,7 +26,9 @@ The MAC address must belong to the network interface configured for Wake-on-LAN.
 
 Enable **Allow remote turn off** during creation, or **Enable remote turn off** on the detail page, when the Wakezilla client runs on the target. Set **Turn Off Port** to the client's listening port, normally `3001`.
 
-The proxy must be able to reach this port. Do not expose the client shutdown endpoint to untrusted networks.
+For a new machine, the detail page generates a unique shutdown key and shows the commands to install Wakezilla and configure the target client. The page verifies the key automatically. The remote turn-off control appears only after verification succeeds.
+
+The proxy must be able to reach the client port. Do not expose it to untrusted networks, even after authenticated shutdown is enabled. See [Secure Shutdown](../guides/secure-shutdown/).
 
 ## Inactivity period
 

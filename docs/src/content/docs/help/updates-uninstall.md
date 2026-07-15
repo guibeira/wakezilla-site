@@ -42,6 +42,8 @@ sudo wakezilla setup --mode client --port 3001 --yes
 
 Use an elevated PowerShell without `sudo` on Windows.
 
+Rerunning client setup without `--key` preserves an existing secure shutdown key. To replace that key, use **Reconfigure security** on the machine detail page and run the newly generated command instead.
+
 ## Remove system services
 
 ```sh

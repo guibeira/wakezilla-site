@@ -29,13 +29,17 @@ Wakezilla forwards traffic bidirectionally. A missing response normally indicate
 ## Automatic shutdown does not run
 
 - Confirm that remote shutdown is enabled for the machine.
+- Open the machine detail page and confirm that secure shutdown is `verified`; if it reports `key_mismatch`, run the currently displayed setup command again.
 - Verify the turn-off port, normally `3001`.
 - Open `http://<target-ip>:3001/health` from the proxy host.
+- Synchronize the proxy and target clocks; signed requests allow a maximum difference of 60 seconds.
 - Check that no new connections are reaching any configured port for the machine.
 - Confirm that the inactivity period is expressed in minutes.
 - Confirm that the machine has at least one port forward; the current monitor is initialized by a forwarder.
 
 Wakezilla makes one request per activity window. If that request fails, create a new accepted proxy connection to reset the state before testing again.
+
+See [Secure Shutdown](../guides/secure-shutdown/#troubleshooting) for pairing-specific checks.
 
 ## A powered-on machine appears offline
 
