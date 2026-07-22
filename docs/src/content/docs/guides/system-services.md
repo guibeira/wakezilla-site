@@ -40,7 +40,7 @@ sudo wakezilla setup --mode proxy --port 3000 --yes
 
 Reconfiguring one mode preserves the other mode's port in `config.toml`.
 
-`--key` is valid only for client mode. The dashboard-generated key is URL-safe base64 that decodes to 32 bytes. Treat the command as a credential and see [Secure Shutdown](./secure-shutdown/) for the complete workflow.
+`--key` is valid only for client mode. The dashboard-generated key is URL-safe base64 that decodes to 32 bytes. Treat the command as a credential and see [Secure Shutdown](/docs/guides/secure-shutdown/) for the complete workflow.
 
 ## What setup installs
 
@@ -74,7 +74,7 @@ sudo wakezilla service logs --mode proxy
 sudo wakezilla service logs --mode proxy --follow --lines 100
 ```
 
-See [Logs](../help/logs/) for platform locations and direct service-manager commands.
+See [Logs](/docs/help/logs/) for platform locations and direct service-manager commands.
 
 ## Update a service installation
 

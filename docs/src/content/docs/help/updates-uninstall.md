@@ -60,7 +60,7 @@ The command intentionally preserves:
 - service log files;
 - the user-installed Wakezilla executable.
 
-See [Storage and Backups](../reference/storage/) before deleting retained data.
+See [Storage and Backups](/docs/reference/storage/) before deleting retained data.
 
 ## Remove the executable
 

@@ -50,6 +50,6 @@ The tray opens the local proxy URL derived from Wakezilla configuration. If the 
 
 ## Related
 
-- [System Services](./system-services/)
-- [Logs](../help/logs/)
-- [Platform Behavior](../reference/platform-behavior/)
+- [System Services](/docs/guides/system-services/)
+- [Logs](/docs/help/logs/)
+- [Platform Behavior](/docs/reference/platform-behavior/)

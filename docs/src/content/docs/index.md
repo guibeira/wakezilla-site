@@ -24,21 +24,21 @@ Every accepted connection refreshes the machine's inactivity timer. If no new co
 
 ## Start here
 
-- Follow [Installation](./getting-started/installation/) to install the command-line application.
-- Read [Quick Start](./getting-started/quick-start/) to configure your first machine and port.
-- Open [How Wakezilla Works](./getting-started/how-it-works/) for the complete request-and-response lifecycle.
+- Follow [Installation](/docs/getting-started/installation/) to install the command-line application.
+- Read [Quick Start](/docs/getting-started/quick-start/) to configure your first machine and port.
+- Open [How Wakezilla Works](/docs/getting-started/how-it-works/) for the complete request-and-response lifecycle.
 
 ## Operate Wakezilla
 
-- Use the [Web Dashboard](./guides/web-dashboard/) to discover and manage machines.
-- Pair each target with [Secure Shutdown](./guides/secure-shutdown/) before enabling remote power operations.
-- Install [System Services](./guides/system-services/) for boot-time startup.
-- Work from the [Terminal UI](./guides/terminal-ui/) or [Desktop Tray](./guides/desktop-tray/).
-- Consult the [CLI](./reference/cli/), [Configuration](./reference/configuration/), and [HTTP API](./reference/http-api/) references.
+- Use the [Web Dashboard](/docs/guides/web-dashboard/) to discover and manage machines.
+- Pair each target with [Secure Shutdown](/docs/guides/secure-shutdown/) before enabling remote power operations.
+- Install [System Services](/docs/guides/system-services/) for boot-time startup.
+- Work from the [Terminal UI](/docs/guides/terminal-ui/) or [Desktop Tray](/docs/guides/desktop-tray/).
+- Consult the [CLI](/docs/reference/cli/), [Configuration](/docs/reference/configuration/), and [HTTP API](/docs/reference/http-api/) references.
 
 ## Deploy safely
 
-Wakezilla authenticates shutdown requests between a paired proxy and client. The proxy dashboard and API still do not provide user authentication or TLS, and legacy clients can accept unsigned shutdown requests until migrated. Read [Security](./reference/security/) before allowing access from another host, and review [Known Limitations](./help/known-limitations/) before choosing custom ports or relying on status and inactivity behavior.
+Wakezilla authenticates shutdown requests between a paired proxy and client. The proxy dashboard and API still do not provide user authentication or TLS, and legacy clients can accept unsigned shutdown requests until migrated. Read [Security](/docs/reference/security/) before allowing access from another host, and review [Known Limitations](/docs/help/known-limitations/) before choosing custom ports or relying on status and inactivity behavior.
 
 :::caution
 Run Wakezilla on a trusted network. Restrict the dashboard, API, client, and forwarding ports with firewall or private-network policy.

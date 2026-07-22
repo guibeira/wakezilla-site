@@ -42,4 +42,4 @@ If the target port does not become reachable within 60 seconds, Wakezilla drops 
 Allow the selected local port through the proxy host's firewall. Allow the target port between the proxy and target machines, but avoid exposing it more broadly than necessary.
 :::
 
-Accepted connections are recorded in the machine's access history. See [Storage and Backups](../reference/storage/#access-history-retention).
+Accepted connections are recorded in the machine's access history. See [Storage and Backups](/docs/reference/storage/#access-history-retention).

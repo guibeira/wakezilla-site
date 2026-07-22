@@ -80,6 +80,6 @@ Install the latest available release with:
 wakezilla update
 ```
 
-Install a specific version with `wakezilla update --version 0.2.11`. See [Updates and Uninstall](../help/updates-uninstall/) before updating a system-service deployment.
+Install a specific version with `wakezilla update --version 0.2.11`. See [Updates and Uninstall](/docs/help/updates-uninstall/) before updating a system-service deployment.
 
-Continue to [Quick Start](./quick-start/) to run the proxy and register a machine. For unattended startup, follow [System Services](../guides/system-services/) after verifying the foreground flow.
+Continue to [Quick Start](/docs/getting-started/quick-start/) to run the proxy and register a machine. For unattended startup, follow [System Services](/docs/guides/system-services/) after verifying the foreground flow.

@@ -39,7 +39,7 @@ The status indicator has the same semantics as the dashboard: it checks the targ
 
 The TUI does not add authentication. Anyone who can reach the proxy API can perform the same operations. Use a private network, VPN, or authenticated gateway when running it from another host.
 
-Secure client pairing is managed in the web dashboard. The TUI does not display setup commands or verification state. Its `t` action asks the proxy to send the request; a pending, unreachable, or mismatched client can reject or fail that request. Complete [Secure Shutdown](./secure-shutdown/) in the dashboard first.
+Secure client pairing is managed in the web dashboard. The TUI does not display setup commands or verification state. Its `t` action asks the proxy to send the request; a pending, unreachable, or mismatched client can reject or fail that request. Complete [Secure Shutdown](/docs/guides/secure-shutdown/) in the dashboard first.
 
 ## Troubleshooting
 
@@ -49,4 +49,4 @@ If the TUI cannot load machines, verify the base URL directly:
 curl http://192.168.1.10:3000/api/machines
 ```
 
-If a powered-on machine appears off, verify its client endpoint and turn-off port. See [HTTP API](../reference/http-api/#online-status-semantics).
+If a powered-on machine appears off, verify its client endpoint and turn-off port. See [HTTP API](/docs/reference/http-api/#online-status-semantics).
