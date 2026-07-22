@@ -38,22 +38,38 @@ async function assertExists(file, message) {
 
 function* referencesFromHtml(html) {
   for (const [tag] of html.matchAll(/<[a-z][^>]*>/gi)) {
-    if (/^<link\b/i.test(tag) && /\brel="[^"]*\bcanonical\b[^"]*"/i.test(tag)) {
+    const attributes = [...tag.matchAll(
+      /(?:^|[\s<])([a-z][\w:-]*)\s*=\s*(?:"([^"]*)"|'([^']*)')/gi,
+    )].map(([, name, doubleQuoted, singleQuoted]) => [
+      name.toLowerCase(),
+      doubleQuoted ?? singleQuoted,
+    ]);
+    const rel = attributes.find(([name]) => name === 'rel')?.[1];
+
+    if (/^<link\b/i.test(tag) && rel?.toLowerCase().split(/\s+/).includes('canonical')) {
       continue;
     }
 
-    for (const [, reference] of tag.matchAll(/\b(?:href|src)="([^"#?]+)["#?]/gi)) {
-      yield reference;
+    for (const [name, value] of attributes) {
+      if (name !== 'href' && name !== 'src') {
+        continue;
+      }
+
+      const [reference] = value.split(/[?#]/, 1);
+      if (reference) {
+        yield reference;
+      }
     }
   }
 }
 
 assert.deepEqual(
   [...referencesFromHtml(`
-    <a href="../guide/">Guide</a>
-    <link rel="stylesheet" href="/docs/app.css">
-    <link rel="canonical" href="https://wakezilla.dev/docs/guide/">
-    <iframe src="./example.html"></iframe>
+    <a data-href="/docs/ignored/" href = '../guide/?from=index'>Guide</a>
+    <div data-src="/docs/ignored.js"></div>
+    <link rel="stylesheet" href = "/docs/app.css?v=1">
+    <link rel = 'canonical' href='https://wakezilla.dev/docs/guide/'>
+    <iframe src = './example.html#preview'></iframe>
   `)],
   ['../guide/', '/docs/app.css', './example.html'],
   'Local reference discovery must cover links, assets, and embedded content.',
@@ -134,7 +150,7 @@ assert.doesNotMatch(
 );
 assert.match(
   quickStart,
-  /dashboard client currently targets port/,
+  /dashboard client currently targets port\s*<code\b[^>]*>3000<\/code>/,
   'The quick start must explain why direct dashboard access uses port 3000.',
 );
 assert.match(
