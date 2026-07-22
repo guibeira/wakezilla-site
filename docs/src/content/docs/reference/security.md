@@ -43,7 +43,7 @@ The client rejects invalid signatures, timestamps more than 60 seconds outside i
 
 The public `/health` endpoint does not trigger a power action and remains unsigned for availability reporting. The `/health/secure` and `/machines/turn-off` endpoints require signed requests after a key is configured.
 
-Machines created before this feature can remain in `legacy` mode and accept unsigned shutdown requests until they are migrated with **Secure now**. Firewall policy remains an important defense for all clients, especially legacy clients. See [Secure Shutdown](../guides/secure-shutdown/).
+Machines created before this feature can remain in `legacy` mode and accept unsigned shutdown requests until they are migrated with **Secure now**. Firewall policy remains an important defense for all clients, especially legacy clients. See [Secure Shutdown](/docs/guides/secure-shutdown/).
 
 ## System-service installation
 
@@ -70,4 +70,4 @@ The proxy does not currently provide:
 
 Secure shutdown protects the proxy-to-client request. It does not authorize who may call the proxy API, so anyone who can reach that API can still request a wake, shutdown, update, or deletion operation.
 
-Track deployment constraints in [Known Limitations](../help/known-limitations/).
+Track deployment constraints in [Known Limitations](/docs/help/known-limitations/).

@@ -26,7 +26,7 @@ Choose **Proxy server** with the arrow keys or press `1`, then press Enter.
 
 ![Wakezilla setup wizard with Proxy server selected](/docs/images/setup-select-mode.png)
 
-Keep the default proxy port `3000`, or enter another available TCP port.
+Keep the default proxy port `3000` for direct dashboard access. The dashboard client currently targets port `3000` when the page is opened from an explicit port, so browser requests can fail with a custom listener. See [Known Limitations](/docs/help/known-limitations/) before using a different port.
 
 ![Wakezilla setup wizard asking for the proxy server port](/docs/images/setup-proxy-port.png)
 
@@ -44,7 +44,7 @@ sudo wakezilla service status --mode proxy
 
 On Windows, run the command from an elevated PowerShell without `sudo`.
 
-Open `http://<proxy-ip>:3000`. The dashboard should load before you continue. If you selected a different port, replace `3000` in the URL.
+Open `http://<proxy-ip>:3000`. The dashboard should load before you continue.
 
 ## 3. Install Wakezilla on the target
 
@@ -94,7 +94,7 @@ The detail page verifies the key automatically. When the client is paired, it re
 The generated command contains the machine's shutdown credential. Treat it as a secret and restrict access to the dashboard while it is visible.
 :::
 
-See [Secure Shutdown](../guides/secure-shutdown/) for verification states, legacy migration, key rotation, and troubleshooting.
+See [Secure Shutdown](/docs/guides/secure-shutdown/) for verification states, legacy migration, key rotation, and troubleshooting.
 
 ## 6. Use the tray on a graphical desktop
 
@@ -114,7 +114,7 @@ The tray can open or copy the dashboard URL, show proxy and client status, contr
 Headless servers do not show a tray icon. This does not affect the proxy or client service installed by `wakezilla setup`. Use `wakezilla service` commands and the web dashboard instead.
 :::
 
-See [Desktop Tray](../guides/desktop-tray/) for the complete menu and platform requirements.
+See [Desktop Tray](/docs/guides/desktop-tray/) for the complete menu and platform requirements.
 
 ## 7. Confirm the inactivity period
 
@@ -134,4 +134,4 @@ Wakezilla waits up to 60 seconds for the target service. If it is still unavaila
 
 The proxy and client now start automatically with the operating system. A connection to the proxy wakes the target when required, carries traffic in both directions, and lets Wakezilla return the target to its platform power state after 60 minutes without a new connection.
 
-Continue with [Web Dashboard](../guides/web-dashboard/) for machine management or [System Services](../guides/system-services/) for service controls and logs. Before allowing another host to connect, read [Security](../reference/security/).
+Continue with [Web Dashboard](/docs/guides/web-dashboard/) for machine management or [System Services](/docs/guides/system-services/) for service controls and logs. Before allowing another host to connect, read [Security](/docs/reference/security/).

@@ -36,6 +36,29 @@ async function assertExists(file, message) {
   await assert.doesNotReject(access(file), message);
 }
 
+function* referencesFromHtml(html) {
+  for (const [tag] of html.matchAll(/<[a-z][^>]*>/gi)) {
+    if (/^<link\b/i.test(tag) && /\brel="[^"]*\bcanonical\b[^"]*"/i.test(tag)) {
+      continue;
+    }
+
+    for (const [, reference] of tag.matchAll(/\b(?:href|src)="([^"#?]+)["#?]/gi)) {
+      yield reference;
+    }
+  }
+}
+
+assert.deepEqual(
+  [...referencesFromHtml(`
+    <a href="../guide/">Guide</a>
+    <link rel="stylesheet" href="/docs/app.css">
+    <link rel="canonical" href="https://wakezilla.dev/docs/guide/">
+    <iframe src="./example.html"></iframe>
+  `)],
+  ['../guide/', '/docs/app.css', './example.html'],
+  'Local reference discovery must cover links, assets, and embedded content.',
+);
+
 for (const page of requiredPages) {
   await assertExists(
     path.join(docsRoot, page, 'index.html'),
@@ -104,16 +127,37 @@ assert.match(
   /Headless servers do not show a tray icon/,
   'The quick start must explain when the tray icon is unavailable.',
 );
+assert.doesNotMatch(
+  quickStart,
+  /or enter another available TCP port|If you selected a different port/,
+  'The quick start must not recommend a custom port for direct dashboard access.',
+);
+assert.match(
+  quickStart,
+  /dashboard client currently targets port/,
+  'The quick start must explain why direct dashboard access uses port 3000.',
+);
+assert.match(
+  quickStart,
+  /href="\/docs\/help\/known-limitations\/"/,
+  'The quick start custom-port warning must link to Known Limitations.',
+);
 
 const generatedFiles = await walk(docsRoot);
 const htmlFiles = generatedFiles.filter((file) => file.endsWith('.html'));
 
 for (const htmlFile of htmlFiles) {
   const html = await readFile(htmlFile, 'utf8');
-  const localReferences = html.matchAll(/(?:href|src)="(\/docs\/[^"#?]*)/g);
+  const pagePath = `/${path.relative('dist', htmlFile).replace(/index\.html$/, '')}`;
 
-  for (const [, reference] of localReferences) {
-    const relative = decodeURIComponent(reference.slice('/docs/'.length));
+  for (const reference of referencesFromHtml(html)) {
+    const resolved = new URL(reference, `https://wakezilla.dev${pagePath}`);
+
+    if (resolved.origin !== 'https://wakezilla.dev' || !resolved.pathname.startsWith('/docs/')) {
+      continue;
+    }
+
+    const relative = decodeURIComponent(resolved.pathname.slice('/docs/'.length));
     const target = relative === ''
       ? path.join(docsRoot, 'index.html')
       : relative.endsWith('/')
@@ -122,7 +166,7 @@ for (const htmlFile of htmlFiles) {
 
     await assertExists(
       target,
-      `Broken local documentation reference in ${htmlFile}: ${reference}`,
+      `Broken local documentation reference in ${htmlFile}: ${reference} resolves to ${resolved.pathname}`,
     );
   }
 }

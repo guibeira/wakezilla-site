@@ -70,7 +70,7 @@ The current CLI displays `--port` for both server commands, but those arguments 
 wakezilla tui --api-url http://192.168.1.10:3000
 ```
 
-`--api-url` defaults to `http://127.0.0.1:3000`. See [Terminal UI](../guides/terminal-ui/).
+`--api-url` defaults to `http://127.0.0.1:3000`. See [Terminal UI](/docs/guides/terminal-ui/).
 
 ## `setup`
 
@@ -95,7 +95,7 @@ sudo wakezilla setup --mode client --port 3001 --key <generated-key> --yes
 
 The key must be URL-safe base64 that decodes to exactly 32 bytes. Treat the complete command as a secret. On Windows, run it from an Administrator terminal without `sudo`.
 
-See [Secure Shutdown](../guides/secure-shutdown/) for the pairing and rotation workflow.
+See [Secure Shutdown](/docs/guides/secure-shutdown/) for the pairing and rotation workflow.
 
 ## `service`
 
@@ -109,7 +109,7 @@ wakezilla service <start|stop|restart|status|logs> [options]
 | `-f, --follow` | `logs` | Continue streaming new log entries |
 | `-n, --lines <COUNT>` | `logs` | Show a number of trailing lines; default `50` |
 
-See [System Services](../guides/system-services/) and [Logs](../help/logs/).
+See [System Services](/docs/guides/system-services/) and [Logs](/docs/help/logs/).
 
 ## `update`
 
