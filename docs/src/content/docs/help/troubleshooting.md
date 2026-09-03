@@ -39,7 +39,7 @@ Wakezilla forwards traffic bidirectionally. A missing response normally indicate
 
 Wakezilla makes one request per activity window. If that request fails, create a new accepted proxy connection to reset the state before testing again.
 
-See [Secure Shutdown](../guides/secure-shutdown/#troubleshooting) for pairing-specific checks.
+See [Secure Shutdown](/docs/guides/secure-shutdown/#troubleshooting) for pairing-specific checks.
 
 ## A powered-on machine appears offline
 
@@ -53,7 +53,7 @@ Windows release builds do not currently include ARP scanning. On Linux or macOS,
 
 The current `proxy-server --port` and `client-server --port` arguments are not applied. Set `WAKEZILLA__SERVER__PROXY_PORT`, `WAKEZILLA__SERVER__CLIENT_PORT`, or the matching `config.toml` values.
 
-The current browser client also assumes API port `3000` when opened from an explicit port. See [Known Limitations](./known-limitations/).
+The current browser client also assumes API port `3000` when opened from an explicit port. See [Known Limitations](/docs/help/known-limitations/).
 
 ## The proxy cannot bind a local port
 
@@ -75,4 +75,4 @@ wakezilla service logs
 
 Add `-f -n 100` to follow the latest 100 log lines on supported systems.
 
-See [Logs](./logs/) for platform-specific sources and `RUST_LOG=debug`.
+See [Logs](/docs/help/logs/) for platform-specific sources and `RUST_LOG=debug`.

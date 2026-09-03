@@ -75,7 +75,7 @@ The configuration model also declares the following keys, but the current runtim
 - `network.read_timeout_secs`
 - every key under `health`
 
-The proxy currently uses fixed connection and wake-wait values. See [Known Limitations](../help/known-limitations/).
+The proxy currently uses fixed connection and wake-wait values. See [Known Limitations](/docs/help/known-limitations/).
 
 ## Invalid configuration
 
@@ -83,6 +83,6 @@ If Wakezilla cannot load or deserialize `config.toml`, it logs a warning and sta
 
 ## Related
 
-- [Storage and Backups](./storage/)
-- [System Services](../guides/system-services/)
-- [Security](./security/)
+- [Storage and Backups](/docs/reference/storage/)
+- [System Services](/docs/guides/system-services/)
+- [Security](/docs/reference/security/)

@@ -28,13 +28,13 @@ Enable **Allow remote turn off** during creation, or **Enable remote turn off** 
 
 For a new machine, the detail page generates a unique shutdown key and shows the commands to install Wakezilla and configure the target client. The page verifies the key automatically. The remote turn-off control appears only after verification succeeds.
 
-The proxy must be able to reach the client port. Do not expose it to untrusted networks, even after authenticated shutdown is enabled. See [Secure Shutdown](../guides/secure-shutdown/).
+The proxy must be able to reach the client port. Do not expose it to untrusted networks, even after authenticated shutdown is enabled. See [Secure Shutdown](/docs/guides/secure-shutdown/).
 
 ## Inactivity period
 
 The inactivity period is measured in minutes. The current creation form uses `60`; edit it on the machine detail page. Monitoring only starts for machines with at least one port forward.
 
-See [Inactivity Timeout](./inactivity-timeout/) for the exact timer behavior.
+See [Inactivity Timeout](/docs/configuration/inactivity-timeout/) for the exact timer behavior.
 
 ## Add or discover a machine
 
@@ -44,4 +44,4 @@ Use **Add machine** to enter the values directly. On Linux and macOS, the networ
 
 The dashboard checks the Wakezilla client `/health` endpoint on the configured turn-off port, or `3001` when no port is set. This is client availability, not a general host or forwarded-service check.
 
-See [Web Dashboard](../guides/web-dashboard/) for editing, manual controls, history, and deletion.
+See [Web Dashboard](/docs/guides/web-dashboard/) for editing, manual controls, history, and deletion.

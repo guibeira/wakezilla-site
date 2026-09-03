@@ -46,4 +46,4 @@ Automatic shutdown requires:
 
 The final operating-system action is suspend with shutdown fallback on Linux, shutdown on macOS, and hibernate on Windows. Test that Wake-on-LAN can restore the target from its resulting power state.
 
-See [Secure Shutdown](../guides/secure-shutdown/) for client pairing and [Known Limitations](../help/known-limitations/#one-remote-power-attempt-per-activity-window) for retry behavior and default differences.
+See [Secure Shutdown](/docs/guides/secure-shutdown/) for client pairing and [Known Limitations](/docs/help/known-limitations/#one-remote-power-attempt-per-activity-window) for retry behavior and default differences.

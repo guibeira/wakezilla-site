@@ -41,7 +41,7 @@ Linux musl packages keep the primary executable free of desktop library requirem
 
 ## Related
 
-- [Installation](../getting-started/installation/)
-- [Network Scanner](../guides/network-scanner/)
-- [System Services](../guides/system-services/)
-- [Desktop Tray](../guides/desktop-tray/)
+- [Installation](/docs/getting-started/installation/)
+- [Network Scanner](/docs/guides/network-scanner/)
+- [System Services](/docs/guides/system-services/)
+- [Desktop Tray](/docs/guides/desktop-tray/)

@@ -16,7 +16,7 @@ The scanner at the top of the dashboard can automatically select a network inter
 3. In **Discovered devices**, choose the plus action for a device.
 4. Verify the prefilled IP address, MAC address, and hostname-derived name.
 
-Scanning requires raw-network access on Linux and macOS and is unavailable in Windows builds. See [Network Scanner](./network-scanner/).
+Scanning requires raw-network access on Linux and macOS and is unavailable in Windows builds. See [Network Scanner](/docs/guides/network-scanner/).
 
 ## Register a machine
 
@@ -70,7 +70,7 @@ Each **Copy command** button briefly changes to **Copied!** after a successful c
 
 **Turn off machine** is hidden for a new client until secure setup is verified. It sends an authenticated request to the client port once available. Legacy clients keep the control while they are migrated and show a **Secure now** action. A verified client offers **Reconfigure security** to rotate its key.
 
-See [Secure Shutdown](./secure-shutdown/) for the pairing flow and [Platform Behavior](../reference/platform-behavior/) for the action performed on each operating system.
+See [Secure Shutdown](/docs/guides/secure-shutdown/) for the pairing flow and [Platform Behavior](/docs/reference/platform-behavior/) for the action performed on each operating system.
 
 ## Access history
 

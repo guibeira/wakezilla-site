@@ -5,7 +5,7 @@ description: Pair a target client with the proxy so only authenticated Wakezilla
 
 Wakezilla can pair each target client with its proxy using a unique 256-bit key. After pairing, shutdown requests are signed with HMAC-SHA256 and the client rejects requests with an invalid signature, an expired timestamp, or a reused nonce.
 
-This protects the destructive target-side action from unauthenticated callers. The proxy dashboard and API remain separate trust boundaries and should still be restricted to a trusted network, VPN, or authenticated gateway. See [Security](../reference/security/).
+This protects the destructive target-side action from unauthenticated callers. The proxy dashboard and API remain separate trust boundaries and should still be restricted to a trusted network, VPN, or authenticated gateway. See [Security](/docs/reference/security/).
 
 ## Pair a new client
 
@@ -110,4 +110,4 @@ Rotate the key if the setup command, client configuration, proxy machine databas
 - **Authentication fails intermittently:** synchronize the proxy and target clocks.
 - **The shutdown control is missing:** finish verification, or confirm that remote shutdown is enabled for the machine.
 
-See [Web Dashboard](./web-dashboard/) for the complete machine workflow, [System Services](./system-services/) for client service controls, and [HTTP API](../reference/http-api/) for endpoint details.
+See [Web Dashboard](/docs/guides/web-dashboard/) for the complete machine workflow, [System Services](/docs/guides/system-services/) for client service controls, and [HTTP API](/docs/reference/http-api/) for endpoint details.

@@ -6,7 +6,7 @@ description: Endpoints exposed by the Wakezilla proxy and target-side client.
 The proxy API is served from the dashboard port, normally `http://<proxy-ip>:3000`. It uses JSON for request and response bodies.
 
 :::danger
-The proxy API has no user authentication and includes state-changing wake, delete, key-rotation, and remote power operations. Restrict it to trusted clients. Secure shutdown authenticates the proxy-to-client request, not the caller-to-proxy request. See [Security](./security/).
+The proxy API has no user authentication and includes state-changing wake, delete, key-rotation, and remote power operations. Restrict it to trusted clients. Secure shutdown authenticates the proxy-to-client request, not the caller-to-proxy request. See [Security](/docs/reference/security/).
 :::
 
 ## Machine model

@@ -46,7 +46,7 @@ After the inactivity window expires, Wakezilla marks the action as triggered bef
 
 An accepted forwarding connection uses a one-second probe, waits up to 60 seconds after sending Wake-on-LAN, and checks every two seconds. If the target service does not become reachable, Wakezilla drops the original connection. The caller must reconnect to try again.
 
-Several related configuration keys are declared but do not currently replace these fixed values. See [Configuration](../reference/configuration/#declared-but-not-currently-applied).
+Several related configuration keys are declared but do not currently replace these fixed values. See [Configuration](/docs/reference/configuration/#declared-but-not-currently-applied).
 
 ## Status checks the Wakezilla client
 
