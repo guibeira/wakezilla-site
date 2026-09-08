@@ -68,7 +68,7 @@ sudo wakezilla service start --mode proxy
 3. Preserve ownership and permissions required by the service manager.
 4. Start the proxy and inspect its logs for parsing errors.
 
-After restoring a client or proxy from different points in time, the stored keys may no longer match. Open the machine detail page, choose **Reconfigure security** if necessary, run the current command on the target, and wait for verification.
+After restoring a client or proxy from different points in time, the stored keys may no longer match. Open **Set up client** in the machine's details. If rotation is needed, choose **Set up client again** and confirm **Generate new key**. Run the current command on the target and wait for verification.
 
 ## Uninstall behavior
 

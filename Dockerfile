@@ -1,4 +1,7 @@
-FROM node:22-alpine
+FROM node:24-bookworm-slim
+
+# Supply the font used when Sharp renders the social card from SVG.
+RUN apt-get update && apt-get install -y --no-install-recommends fontconfig fonts-dejavu-core
 
 WORKDIR /app
 

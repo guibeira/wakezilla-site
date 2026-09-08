@@ -7,11 +7,11 @@ Each port forward maps one TCP port on the proxy host to one TCP port on the tar
 
 ## Add a forwarding rule
 
-The new-machine form starts with one empty forward. Fill it directly. On a machine detail page, choose **+ Add port** to create a new row.
+The new-machine form starts without services. Under **Services and port forwarding**, choose **Add service** to create a row. The same control is available in an existing machine's details. Use **Remove service** to discard a row before saving.
 
-- **Service Name:** an optional label used in history and the TUI;
-- **Local Port:** the port Wakezilla listens on at the proxy host;
-- **Target Port:** the service port Wakezilla connects to on the target machine.
+- **Service name:** an optional label used in history and the TUI;
+- **Local port:** the port Wakezilla listens on at the proxy host;
+- **Target port:** the service port Wakezilla connects to on the target machine.
 
 For a media server listening on port `8096`, a direct mapping looks like this:
 

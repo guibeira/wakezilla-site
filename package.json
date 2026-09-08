@@ -9,15 +9,17 @@
   "scripts": {
     "dev": "vite",
     "dev:docs": "npm run dev --workspace=docs",
-    "build": "npm run build:site && npm run build:docs",
-    "build:site": "vite build",
+    "build": "npm run build:site && npm run build:docs && node scripts/generate-sitemap.mjs && npm run verify:seo",
+    "build:site": "npm run images && vite build && node scripts/prerender.mjs",
     "build:docs": "npm run build --workspace=docs && npm run verify:docs",
     "lint": "eslint .",
     "preview": "vite preview",
     "preview:docs": "npm run preview --workspace=docs",
     "test": "vitest run",
     "typecheck": "tsc --noEmit -p tsconfig.app.json",
-    "verify:docs": "node scripts/verify-docs-build.mjs"
+    "verify:docs": "node scripts/verify-docs-build.mjs",
+    "verify:seo": "node scripts/verify-seo-build.mjs",
+    "images": "node scripts/generate-site-images.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.57.4",

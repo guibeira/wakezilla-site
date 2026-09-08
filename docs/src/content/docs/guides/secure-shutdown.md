@@ -11,13 +11,13 @@ This protects the destructive target-side action from unauthenticated callers. T
 
 ### 1. Register the target
 
-In the proxy dashboard, add the target machine and enable **Allow remote turn off**. Keep the default client port `3001` unless you intend to run the client on a different port.
+In the proxy dashboard, choose **Add machine** and expand **Client settings**. Enable **Allow shutdown from the dashboard**. Keep **Client port** at `3001` unless you intend to run the client on a different port.
 
-After the machine is saved, its detail page opens with **Finish setting up your client server** at the top. Wakezilla generates a different key for every machine and includes it in the displayed configuration command.
+After the machine is saved with shutdown enabled, the window moves to **Set up your machine**. You can return to it later with **Set up client** in the machine's details. Wakezilla generates a different key for every machine and includes it in the displayed configuration command.
 
 ### 2. Install Wakezilla on the target
 
-The setup card displays the installation command before the configuration command. Run the command for the target platform if Wakezilla is not already installed.
+Choose **Linux / macOS** or **Windows**. The setup window displays **1. Install Wakezilla** before **2. Set up the client**. Run the installation command if Wakezilla is not already installed on the target.
 
 For Linux and macOS:
 
@@ -33,7 +33,7 @@ irm https://wakezilla.dev/install.ps1 | iex
 
 ### 3. Configure the client server
 
-Copy the generated command from step 2 of the setup card and run it on the target. It has this shape:
+Choose **Copy** beside **2. Set up the client** and run the generated command on the target. It has this shape:
 
 ```sh
 sudo wakezilla setup --mode client --port 3001 --key <generated-key> --yes
@@ -47,22 +47,28 @@ The generated command contains the machine's shutdown credential. Treat it as a 
 
 ### 4. Wait for verification
 
-Keep the machine detail page open. The dashboard automatically sends an authenticated request to the client's secure health endpoint. When the keys match, the setup state changes to **verified** and the **Turn off machine** control becomes available.
+Keep **Set up your machine** open. It automatically sends an authenticated request to the client's secure health endpoint; **Check connection** also starts a check. When the keys match, the API state becomes `verified` and the window shows **Client configured**.
+
+<img src="/docs/images/secure-shutdown-setup.webp" alt="Set up your machine window showing the completed Machine added, Set up client, and Connection steps" width="690" height="608" loading="lazy" decoding="async" />
+
+The image shows an existing, verified client. No shutdown key or generated configuration command is exposed. **View machine** returns to the settings, and **Done** closes the window. A reachable, configured client provides **Shut down** in its details, followed by a **Shut down machine** confirmation.
 
 The regular `/health` endpoint remains public so Wakezilla can report whether the client is reachable. Verification uses the authenticated `/health/secure` endpoint instead.
 
 ## Setup states
 
+The API exposes the states below. The dashboard uses messages such as **Waiting for setup** and **Client configured** to describe them.
+
 | State | Meaning | Next action |
 | --- | --- | --- |
 | `disabled` | Remote shutdown is not enabled for this machine. | Enable remote shutdown if needed. |
-| `legacy` | The client accepts older unsigned shutdown requests. | Choose **Secure now**, then run the generated command. |
+| `legacy` | The client accepts older unsigned shutdown requests. | Choose **Set up client again**, confirm **Generate new key**, then run the generated command. |
 | `pending` | A key exists, but the client has not proved it is using that key. | Run the generated command and leave the page open. |
 | `verified` | The proxy and client share the same key. | No action is required. |
 | `unreachable` | The proxy could not reach the client. | Start the client and check its IP, port, firewall, and service status. |
 | `key_mismatch` | The client responded with a different key. | Run the currently displayed setup command again. |
 
-The dashboard only shows **Turn off machine** for `legacy` and `verified` clients. New secure clients must be verified before the control appears.
+The dashboard offers **Shut down** only for reachable `legacy` and `verified` clients. New secure clients must be verified before the control appears.
 
 ## How requests are authenticated
 
@@ -90,8 +96,8 @@ Keep the proxy and target clocks synchronized. A clock difference greater than 6
 
 Machines created before secure shutdown can appear as `legacy`. They continue to work with unsigned requests for compatibility, but should be migrated:
 
-1. Open the machine detail page.
-2. Choose **Secure now**.
+1. Open the machine's details and choose **Set up client**.
+2. Choose **Set up client again**, then confirm **Generate new key**.
 3. Run the new configuration command on the target.
 4. Wait for the dashboard to report `verified`.
 
@@ -99,7 +105,7 @@ Once the key is configured, that client no longer accepts unsigned secure health
 
 ## Rotate or replace a key
 
-Choose **Reconfigure security** on a verified machine to generate a new key. Rotation immediately changes the key stored by the proxy and returns the machine to `pending`, so shutdown requests will not work until the new command is run on the target and verification succeeds.
+Open **Set up client** on a verified machine. Choose **Set up client again**, then confirm **Generate new key**. Rotation immediately changes the key stored by the proxy and returns the machine to `pending`, so shutdown requests will not work until the new command is run on the target and verification succeeds. Cancel the confirmation if you only wanted to inspect the setup.
 
 Rotate the key if the setup command, client configuration, proxy machine database, or a backup containing either file may have been exposed.
 
