@@ -3,22 +3,21 @@ import {
   ArrowRight,
   Bot,
   CheckCircle2,
+  Download,
   Github,
   Gauge,
-  Globe2,
   MonitorPlay,
   Moon,
-  Network,
+  Play,
   Power,
   Server,
   Star,
-  TimerReset,
-  Zap,
 } from 'lucide-react';
-import wakezillaDashboard from './assets/wakezilla-dashboard.png';
-import wakezillaLogo from './assets/wakezilla.png';
+import wakezillaDashboard from './assets/wakezilla-dashboard.webp';
+import wakezillaLogo from './assets/wakezilla.webp';
 import { InstallCommand } from './components/InstallCommand';
 import { LifecycleDiagram } from './components/LifecycleDiagram';
+import { LifecycleStory } from './components/LifecycleStory';
 import { SectionHeading } from './components/SectionHeading';
 import { fetchGitHubStars, formatGitHubStars } from './githubStars';
 
@@ -42,68 +41,29 @@ const installCommands: Record<InstallPlatform, { command: string; shell: string;
   },
 };
 
-const lifecycleSteps = [
-  {
-    number: '01',
-    title: 'Traffic arrives',
-    description: 'A connection reaches a port managed by Wakezilla.',
-    icon: Globe2,
-  },
-  {
-    number: '02',
-    title: 'The target wakes',
-    description: 'If the machine is offline, Wakezilla sends a magic packet and waits for it.',
-    icon: Zap,
-  },
-  {
-    number: '03',
-    title: 'Request goes through',
-    description: 'The original connection is forwarded to the service when it is ready.',
-    icon: Network,
-  },
-  {
-    number: '04',
-    title: 'Response comes back',
-    description: 'The service response travels back through Wakezilla to the client.',
-    icon: ArrowRight,
-  },
-  {
-    number: '05',
-    title: 'Activity resets the timer',
-    description: 'Every accepted connection updates the target’s last-request time.',
-    icon: TimerReset,
-  },
-  {
-    number: '06',
-    title: 'Silence means sleep',
-    description: 'After the configured idle period, Wakezilla asks the target to power down.',
-    icon: Moon,
-  },
-];
-
 const useCases = [
   {
     icon: MonitorPlay,
     label: 'Media server',
-    title: 'Ready for movie night, quiet the rest of the week.',
+    title: 'Movie night, on demand.',
     detail: 'Wake Jellyfin or Plex when somebody opens the app.',
   },
   {
     icon: Bot,
     label: 'Local AI',
-    title: 'Keep the GPU off until a prompt needs it.',
+    title: 'Give your GPU a break.',
     detail: 'Bring an Ollama or inference machine online on demand.',
   },
   {
     icon: Gauge,
     label: 'Development',
-    title: 'Use powerful hardware only while you are building.',
+    title: 'Power for your next build.',
     detail: 'Route traffic to a workstation or test server when needed.',
   },
   {
     icon: Server,
     label: 'Occasional services',
-    title: 'Stop paying the always-on tax for rarely used tools.',
+    title: 'Small jobs. Quiet servers.',
     detail: 'Perfect for backups, game servers, and internal apps.',
   },
 ];
@@ -121,7 +81,7 @@ function detectInstallPlatform(): InstallPlatform {
 
 function App() {
   const [copied, setCopied] = useState(false);
-  const [installPlatform] = useState<InstallPlatform>(() => detectInstallPlatform());
+  const [installPlatform, setInstallPlatform] = useState<InstallPlatform>('unix');
   const [githubStars, setGithubStars] = useState<GitHubStarsState>({ status: 'loading' });
 
   const selectedInstall = installCommands[installPlatform];
@@ -142,6 +102,10 @@ function App() {
       : 'stars loading';
   const githubRepositoryAriaLabel = `GitHub repository, ${githubStarsAriaStatus}`;
   const heroGithubRepositoryAriaLabel = `View on GitHub repository, ${githubStarsAriaStatus}`;
+
+  useEffect(() => {
+    setInstallPlatform(detectInstallPlatform());
+  }, []);
 
   useEffect(() => {
     let isMounted = true;
@@ -176,6 +140,7 @@ function App() {
 
   return (
     <div className="site-shell">
+      <a className="skip-link" href="#top">Skip to content</a>
       <header className="site-header">
         <nav className="page-width site-nav" aria-label="Main navigation">
           <a className="brand" href="#top" aria-label="Wakezilla home">
@@ -206,24 +171,32 @@ function App() {
         </nav>
       </header>
 
-      <main id="top">
-        <section className="hero-section page-width">
+      <main id="top" tabIndex={-1}>
+        <section className="hero-section page-width" aria-labelledby="hero-heading">
+          <div className="hero-light" aria-hidden="true"><span /><span /><span /></div>
           <div className="hero-copy">
-            <p className="section-kicker">ON-DEMAND POWER FOR YOUR HOMELAB</p>
-            <h1>
-              Your server wakes for the request.
-              <span>Sleeps when the work is done.</span>
+            <p className="hero-eyebrow"><span /> ON-DEMAND POWER FOR YOUR HOMELAB</p>
+            <h1 id="hero-heading">
+              Let your servers<br />
+              <span>sleep.</span>
             </h1>
             <p className="hero-copy__description">
-              Wakezilla wakes your target, proxies the request, and returns the response.
-              After 60 minutes without activity, Wakezilla powers the target down automatically.
+              Ready when you need them. Quiet when you don’t.
+              <span>Wakezilla is a free, open-source Wake-on-LAN proxy. Wake your machines on demand, route TCP traffic, and power them down after inactivity.</span>
             </p>
             <div className="hero-actions">
-              <a className="button button--primary" href="#how">
-                See how it works <ArrowRight aria-hidden="true" />
+              <a className="button button--primary" href="#install">
+                <Download aria-hidden="true" /> Install Wakezilla
               </a>
+              <a className="button button--secondary" href="#demo">
+                <Play aria-hidden="true" /> Watch it work
+              </a>
+            </div>
+            <div className="hero-trust" aria-label="Project highlights">
+              <span><CheckCircle2 aria-hidden="true" /> Free & open source</span>
+              <span>Linux, macOS & Windows</span>
               <a
-                className="button button--secondary"
+                className="hero-repo-link"
                 href="https://github.com/guibeira/wakezilla"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -231,28 +204,23 @@ function App() {
               >
                 <Github aria-hidden="true" />
                 <span>View on GitHub</span>
-                <span className="button__meta"><Star aria-hidden="true" /> {githubStarsLabel}</span>
               </a>
-            </div>
-            <div className="hero-trust" aria-label="Project highlights">
-              <span><CheckCircle2 aria-hidden="true" /> Open source</span>
-              <span><CheckCircle2 aria-hidden="true" /> MIT licensed</span>
-              <span><CheckCircle2 aria-hidden="true" /> Linux, macOS & Windows</span>
             </div>
           </div>
 
           <LifecycleDiagram />
         </section>
 
-        <section className="section-block page-width" aria-labelledby="why-heading">
+        <section className="section-block page-width benefits-section" aria-labelledby="why-heading">
           <div className="split-heading">
             <SectionHeading
               eyebrow="THE ALWAYS-ON TAX"
               title="Why keep it running?"
-              description="Most homelab services are used in bursts. Wakezilla lets the hardware follow demand instead of burning energy through the quiet hours."
+              id="why-heading"
+              description="Your best hardware doesn’t need to run around the clock. Let its working hours follow yours."
             />
             <p className="split-heading__aside">
-              The service still feels available. The machine simply does not have to be awake before the first connection arrives.
+              Less idle time. Less noise. More room to do something useful with your hardware.
             </p>
           </div>
 
@@ -285,59 +253,33 @@ function App() {
           </div>
         </section>
 
-        <section id="how" className="section-block section-block--panel">
+        <section id="how" className="section-block how-section" aria-labelledby="how-heading">
           <div className="page-width">
             <SectionHeading
-              eyebrow="THE COMPLETE LOOP"
-              title="How Wakezilla works"
-              description="The request and response are only half the story. Wakezilla also keeps the target awake while traffic continues and closes the loop when activity stops."
+              eyebrow="A LITTLE AUTOMATION. A COMPLETE LOOP."
+              title="From the first request to a well-earned rest."
+              id="how-heading"
+              description="Wake, forward, respond, rest. Wakezilla connects the dots."
               align="center"
             />
 
-            <ol className="process-grid">
-              {lifecycleSteps.map(({ number, title, description, icon: Icon }) => (
-                <li key={number}>
-                  <div className="process-grid__number">{number}</div>
-                  <Icon aria-hidden="true" />
-                  <h3>{title}</h3>
-                  <p>{description}</p>
-                </li>
-              ))}
-            </ol>
-          </div>
-        </section>
-
-        <section id="use-cases" className="section-block page-width">
-          <SectionHeading
-            eyebrow="USE THE BIG MACHINE WHEN IT MATTERS"
-            title="Built for real homelabs"
-            description="From movie night to local inference, keep occasional workloads reachable without keeping their hardware awake around the clock."
-          />
-
-          <div className="use-case-grid">
-            {useCases.map(({ icon: Icon, label, title, detail }, index) => (
-              <article key={label} className={`use-case-card use-case-card--${index + 1}`}>
-                <div className="use-case-card__icon"><Icon aria-hidden="true" /></div>
-                <span>{label}</span>
-                <h3>{title}</h3>
-                <p>{detail}</p>
-              </article>
-            ))}
+            <LifecycleStory />
           </div>
         </section>
 
         <section className="section-block page-width configuration-section">
           <div>
             <SectionHeading
-              eyebrow="YOU SET THE RHYTHM"
-              title="Configure the lifecycle"
-              description="Register a machine, choose the ports Wakezilla should proxy, and decide how long it may remain idle."
+              eyebrow="YOUR MACHINES. YOUR RULES."
+              title="Everything in its right place."
+              description="Your machines, ports, and inactivity settings. Together in one simple dashboard."
             />
             <ul className="configuration-points">
-              <li><CheckCircle2 aria-hidden="true" /> Discover or add machines from the web interface.</li>
-              <li><CheckCircle2 aria-hidden="true" /> Set local and target ports for each service.</li>
-              <li><CheckCircle2 aria-hidden="true" /> Choose the inactivity period in minutes.</li>
+              <li><span>01</span> Discover or add your machines.</li>
+              <li><span>02</span> Connect the ports your apps use.</li>
+              <li><span>03</span> Choose when it’s time to rest.</li>
             </ul>
+            <a className="text-link" href="/docs/guides/web-dashboard/">Explore the dashboard <ArrowRight aria-hidden="true" /></a>
           </div>
 
           <figure className="dashboard-preview">
@@ -347,12 +289,28 @@ function App() {
             </div>
             <img
               src={wakezillaDashboard}
-              alt="Wakezilla web interface with expanded port forward fields"
-              width="1080"
-              height="750"
+              alt="Wakezilla dashboard showing machine status and configured services"
+              width="1440"
+              height="1000"
               loading="lazy"
             />
           </figure>
+        </section>
+
+        <section id="use-cases" className="section-block page-width">
+          <SectionHeading
+            eyebrow="MADE FOR YOUR CORNER OF THE INTERNET"
+            title="Big ideas. Smaller running hours."
+            description="A movie, a prompt, a new project. Give your hardware a reason to wake up."
+          />
+          <div className="use-case-grid">
+            {useCases.map(({ icon: Icon, label, title, detail }, index) => (
+              <article key={label} className={`use-case-card use-case-card--${index + 1}`}>
+                <div className="use-case-card__icon"><Icon aria-hidden="true" /></div>
+                <span>{label}</span><h3>{title}</h3><p>{detail}</p>
+              </article>
+            ))}
+          </div>
         </section>
 
         <section id="install" className="section-block section-block--install">
@@ -360,7 +318,7 @@ function App() {
             <div>
               <SectionHeading
                 eyebrow="ONE COMMAND AWAY"
-                title="Install and start saving energy"
+                title="Your homelab can take it from here."
                 description="Install Wakezilla, run the guided setup, and register the machines that should wake on demand."
               />
               <a
@@ -406,9 +364,9 @@ function App() {
 
         <section className="final-cta page-width">
           <img src={wakezillaLogo} alt="" />
-          <p className="section-kicker">THE NEXT REQUEST CAN WAKE IT</p>
+          <p className="section-kicker">READY FOR THE NEXT REQUEST</p>
           <h2>Let your server sleep.</h2>
-          <p>Keep the service available without keeping the machine awake.</p>
+          <p>It has better things to do than wait.</p>
           <div className="hero-actions">
             <a className="button button--primary" href="#install">
               Install Wakezilla <ArrowRight aria-hidden="true" />

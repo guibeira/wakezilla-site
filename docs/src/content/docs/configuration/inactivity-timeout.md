@@ -3,17 +3,19 @@ title: Inactivity Timeout
 description: Control when Wakezilla asks an inactive target machine to shut down.
 ---
 
-Wakezilla tracks activity per target IP. The timer is initialized when a TCP forward starts and resets whenever that forward accepts a new connection.
+Wakezilla tracks activity per registered machine. The timer is initialized when a TCP forward starts and resets whenever that forward accepts a new connection.
 
 ## Configure the timeout
 
-Set **Inactivity Period (minutes)** on the machine detail page. The current web interface creates new machines with `60` minutes:
+Expand **Client settings** and set **Inactivity (minutes)** in the creation or details window. The current web interface starts new machines at `60` minutes:
 
 ```text
-Inactivity Period: 60
+Inactivity (minutes): 60
 ```
 
 Each newly accepted connection resets the timer. The connection may then carry requests and responses in both directions until it closes.
+
+Set the value to `0` to disable automatic shutdown only. Wake-on-LAN and configured port forwards remain available. Choose **Add machine** or **Save changes** to apply the setting.
 
 ## Shutdown sequence
 

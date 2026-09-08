@@ -10,6 +10,15 @@ export default defineConfig({
       title: 'Wakezilla',
       description: 'Wake machines on demand, proxy TCP traffic, and return them to a low-power state after inactivity.',
       favicon: '/favicon.svg',
+      head: [
+        { tag: 'meta', attrs: { property: 'og:image', content: 'https://wakezilla.dev/social-card.png' } },
+        { tag: 'meta', attrs: { property: 'og:image:type', content: 'image/png' } },
+        { tag: 'meta', attrs: { property: 'og:image:width', content: '1200' } },
+        { tag: 'meta', attrs: { property: 'og:image:height', content: '630' } },
+        { tag: 'meta', attrs: { property: 'og:image:alt', content: 'Wakezilla: Wake-on-LAN, on demand. Free and open source for Linux, macOS and Windows.' } },
+        { tag: 'meta', attrs: { name: 'twitter:image', content: 'https://wakezilla.dev/social-card.png' } },
+        { tag: 'meta', attrs: { name: 'twitter:image:alt', content: 'Wakezilla: Wake-on-LAN, on demand. Free and open source for Linux, macOS and Windows.' } },
+      ],
       customCss: ['./src/styles/custom.css'],
       components: {
         SiteTitle: './src/components/SiteTitle.astro',

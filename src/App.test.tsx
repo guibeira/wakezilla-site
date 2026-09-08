@@ -90,14 +90,14 @@ describe('App lifecycle explanation', () => {
     expect(
       screen.getByRole('heading', {
         level: 1,
-        name: /your server wakes for the request\. sleeps when the work is done\./i,
+        name: /let your servers sleep\./i,
       }),
     ).toBeInTheDocument();
-    expect(screen.getAllByText('REQUEST').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('GET /media').length).toBeGreaterThan(0);
     expect(screen.getAllByText('RESPONSE').length).toBeGreaterThan(0);
     expect(screen.getAllByText('200 OK').length).toBeGreaterThan(0);
-    expect(screen.getAllByText(/every new request resets the idle timer/i).length).toBeGreaterThan(0);
-    expect(screen.getAllByText(/after .* without activity.*powers.*down/i).length).toBeGreaterThan(0);
+    expect(screen.getByText(/new connections reset the timer/i)).toBeInTheDocument();
+    expect(screen.getByText(/after your configured idle period.*power down/i)).toBeInTheDocument();
     expect(screen.getAllByText(/60 minutes/i).length).toBeGreaterThan(0);
     expect(screen.queryByText(/^N min$/i)).not.toBeInTheDocument();
   });
@@ -109,19 +109,16 @@ describe('App lifecycle explanation', () => {
     render(<App />);
 
     for (const stage of [
-      'Request arrives',
-      'Target checked',
-      'Wake packet sent',
-      'Request forwarded',
-      'Response returned',
-      'Idle timer',
-      'Target sleeps',
+      'A request is all it takes.',
+      'A clear path to your server.',
+      'The answer finds its way back.',
+      'Nothing to do? Time to rest.',
     ]) {
       expect(screen.getAllByText(stage).length).toBeGreaterThan(0);
     }
 
     expect(
-      screen.getByRole('button', { name: /send another request|replay lifecycle/i }),
+      screen.getByRole('button', { name: /next step/i }),
     ).toBeInTheDocument();
   });
 
@@ -134,10 +131,10 @@ describe('App lifecycle explanation', () => {
     const headings = screen.getAllByRole('heading').map((heading) => heading.textContent ?? '');
     const expectedHeadings = [
       'Why keep it running?',
-      'How Wakezilla works',
-      'Built for real homelabs',
-      'Configure the lifecycle',
-      'Install and start saving energy',
+      'From the first request to a well-earned rest.',
+      'Everything in its right place.',
+      'Big ideas. Smaller running hours.',
+      'Your homelab can take it from here.',
       'Open source, by design',
       'Let your server sleep.',
     ];
@@ -156,7 +153,7 @@ describe('App lifecycle explanation', () => {
     render(<App />);
 
     expect(
-      screen.getByRole('img', { name: /wakezilla web interface.*expanded port forward fields/i }),
+      screen.getByRole('img', { name: /wakezilla dashboard.*machine status and configured services/i }),
     ).toBeInTheDocument();
     expect(screen.queryByText(/actual Wakezilla web interface/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/actual product/i)).not.toBeInTheDocument();

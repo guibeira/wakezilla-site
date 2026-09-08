@@ -43,7 +43,7 @@ The client rejects invalid signatures, timestamps more than 60 seconds outside i
 
 The public `/health` endpoint does not trigger a power action and remains unsigned for availability reporting. The `/health/secure` and `/machines/turn-off` endpoints require signed requests after a key is configured.
 
-Machines created before this feature can remain in `legacy` mode and accept unsigned shutdown requests until they are migrated with **Secure now**. Firewall policy remains an important defense for all clients, especially legacy clients. See [Secure Shutdown](/docs/guides/secure-shutdown/).
+Machines created before this feature can remain in `legacy` mode and accept unsigned shutdown requests. To migrate one, open **Set up client**, choose **Set up client again**, confirm **Generate new key**, and configure the target with the new command. Firewall policy remains an important defense for all clients, especially legacy clients. See [Secure Shutdown](/docs/guides/secure-shutdown/).
 
 ## System-service installation
 

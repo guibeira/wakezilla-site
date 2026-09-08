@@ -26,7 +26,7 @@ Choose **Proxy server** with the arrow keys or press `1`, then press Enter.
 
 ![Wakezilla setup wizard with Proxy server selected](/docs/images/setup-select-mode.png)
 
-Keep the default proxy port `3000` for direct dashboard access. The dashboard client currently targets port `3000` when the page is opened from an explicit port, so browser requests can fail with a custom listener. See [Known Limitations](/docs/help/known-limitations/) before using a different port.
+Keep the default proxy port `3000` for this guide. The current dashboard uses same-origin `/api` requests. If you change the configured listener or use a reverse proxy, serve the dashboard and its `/api` routes together. See [Known Limitations](/docs/help/known-limitations/) for server configuration caveats.
 
 ![Wakezilla setup wizard asking for the proxy server port](/docs/images/setup-proxy-port.png)
 
@@ -64,31 +64,36 @@ Do not configure the client service yet. The dashboard will generate a per-machi
 
 ## 4. Register the target machine
 
-In the proxy dashboard, add a machine manually or select one from the network scanner. Enter:
+In the proxy dashboard, choose **Add machine**, or use **Find on network** to discover a target. Enter:
 
 - a recognizable name;
 - the target machine's IP address;
 - its Wake-on-LAN MAC address;
-- turn-off port `3001`;
-- **Allow remote turn off** enabled.
+- a machine type that identifies the hardware.
 
-The creation form already contains **Forward 1**. Enter:
+Expand **Client settings**. Enable **Allow shutdown from the dashboard**, keep **Client port** at `3001`, and set **Inactivity (minutes)** to `60`.
+
+The form starts without services. Under **Services and port forwarding**, choose **Add service** and enter:
 
 - **Service name:** an optional label such as `media`;
-- **Local Port:** the port accepted by the proxy, such as `8096`;
-- **Target Port:** the service port on the target machine, such as `8096`.
+- **Local port:** the port accepted by the proxy, such as `8096`;
+- **Target port:** the service port on the target machine, such as `8096`.
 
-Save the machine. Wakezilla opens its detail page and displays **Finish setting up your client server** at the top.
+<img src="/docs/images/dashboard-add-machine.webp" alt="Add machine window with client settings and an unsaved example Jellyfin service" width="690" height="894" loading="lazy" decoding="async" />
+
+Use your actual target addresses, then choose **Add machine** to save. With dashboard shutdown enabled, the window moves to **Set up your machine**.
 
 ## 5. Pair the target client
 
-The setup card generates the complete configuration command for each platform, including the machine's shutdown key. You do not need to create, type, or replace the key manually.
+Select **Linux / macOS** or **Windows** in **Set up your machine**. The window generates the complete configuration command, including the machine's shutdown key. You do not need to create, type, or replace the key manually.
 
-![Machine setup card with generated installation and secure client configuration commands for Linux, macOS, and Windows](/docs/images/secure-shutdown-setup.png)
+Since Wakezilla is already installed, choose **Copy** beside **2. Set up the client** and run the command on the target with administrator privileges. On Windows, use PowerShell as Administrator.
 
-Since Wakezilla is already installed, choose **Copy command** beside **2. Configure the client server** and run it on the target with administrator privileges. On Windows, use the command displayed under **Windows (Administrator terminal)**.
+Leave the setup window open for automatic verification, or choose **Check connection**. When the client is paired, it shows **Client configured**. Allow TCP `3001` only between the proxy and target.
 
-The detail page verifies the key automatically. When the client is paired, it reports that shutdown requests are authenticated and shows **Turn off machine**. Allow TCP `3001` only between the proxy and target.
+<img src="/docs/images/secure-shutdown-setup.webp" alt="Set up your machine window after successful client verification, showing Client configured" width="690" height="608" loading="lazy" decoding="async" />
+
+This screenshot shows an existing, verified client. Setup commands are only shown while pairing is needed. Use **View machine** or **Done** to leave this screen. If you chose **Set up later**, reopen the machine and select **Set up client** to continue.
 
 :::caution
 The generated command contains the machine's shutdown credential. Treat it as a secret and restrict access to the dashboard while it is visible.
@@ -118,7 +123,7 @@ See [Desktop Tray](/docs/guides/desktop-tray/) for the complete menu and platfor
 
 ## 7. Confirm the inactivity period
 
-The creation form uses `60` minutes but does not display the field. After saving, Wakezilla opens the machine detail page. Confirm that **Inactivity Period (minutes)** is `60`, then choose **Save changes** if you modify it.
+Open the machine's details and expand **Client settings**. Confirm that **Inactivity (minutes)** is `60`, then choose **Save changes** if you modify it. This setting is also available during creation. A value of `0` disables automatic shutdown.
 
 ## 8. Send traffic through Wakezilla
 

@@ -16,11 +16,13 @@ Windows builds do not currently include the ARP scanner. Register machines manua
 
 ## Scan an interface
 
-1. Open the dashboard.
-2. Choose a named interface, such as `en0` or `eth1`, or leave **Auto-detect interface** selected.
-3. Choose **Scan network**.
+1. Open the dashboard and choose **Find on network**.
+2. In **Find your machines**, choose a named **Network interface**, such as `en0` or `eth1`, or use **Automatic selection**.
+3. Choose **Find devices**.
 4. Wait approximately five seconds for ARP replies and hostname lookups.
-5. Choose the plus action beside a result to prefill the registration form.
+5. Choose **Add** beside a result to prefill the registration form. Existing records show **Already added**.
+
+<img src="/docs/images/network-scanner.webp" alt="Find your machines window with the Network interface selector and Find devices action, before a scan" width="570" height="290" loading="lazy" decoding="async" />
 
 Auto-detection prefers an active, non-loopback IPv4 interface with a MAC address. It attempts to avoid common Docker bridge interfaces.
 

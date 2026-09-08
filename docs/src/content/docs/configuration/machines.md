@@ -18,27 +18,28 @@ The MAC address must belong to the network interface configured for Wake-on-LAN.
 ## Optional fields
 
 - **Description** gives administrators more context in the dashboard.
+- **Machine type** selects a hardware category and its visual icon.
 - **Service name** labels a port forward in the dashboard, history chart, and TUI.
-- **Turn off port** identifies the target-side client.
+- **Client port**, under **Client settings**, identifies the target-side client.
 - **Port forwards** define the TCP services that trigger wake and proxy traffic.
 
 ## Remote shutdown
 
-Enable **Allow remote turn off** during creation, or **Enable remote turn off** on the detail page, when the Wakezilla client runs on the target. Set **Turn Off Port** to the client's listening port, normally `3001`.
+Expand **Client settings** during creation or in the machine's details. Enable **Allow shutdown from the dashboard** when the Wakezilla client runs on the target. Set **Client port** to the client's listening port, normally `3001`.
 
-For a new machine, the detail page generates a unique shutdown key and shows the commands to install Wakezilla and configure the target client. The page verifies the key automatically. The remote turn-off control appears only after verification succeeds.
+After saving a new machine with shutdown enabled, **Set up your machine** shows the installation and client configuration commands. It verifies the key automatically. You can also open it with **Set up client** in the details window. The **Shut down** control requires a reachable, configured client.
 
 The proxy must be able to reach the client port. Do not expose it to untrusted networks, even after authenticated shutdown is enabled. See [Secure Shutdown](/docs/guides/secure-shutdown/).
 
 ## Inactivity period
 
-The inactivity period is measured in minutes. The current creation form uses `60`; edit it on the machine detail page. Monitoring only starts for machines with at least one port forward.
+Set **Inactivity (minutes)** under **Client settings**. The form starts at `60`, and you can change it before creation or later in the details window. Use `0` to disable automatic shutdown. Monitoring only starts for machines with at least one port forward.
 
 See [Inactivity Timeout](/docs/configuration/inactivity-timeout/) for the exact timer behavior.
 
 ## Add or discover a machine
 
-Use **Add machine** to enter the values directly. On Linux and macOS, the network scanner can discover LAN devices and prefill the record. Always verify the detected IP and MAC address before saving.
+Use **Add machine** to enter the values directly. **Find on network** opens the scanner, where **Find devices** discovers LAN devices on Linux and macOS. Choose **Add** beside a result, then verify the detected IP and MAC address before saving.
 
 ## Online status
 

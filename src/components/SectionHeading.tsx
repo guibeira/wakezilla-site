@@ -1,4 +1,5 @@
 type SectionHeadingProps = {
+  id?: string;
   eyebrow: string;
   title: string;
   description?: string;
@@ -6,6 +7,7 @@ type SectionHeadingProps = {
 };
 
 export function SectionHeading({
+  id,
   eyebrow,
   title,
   description,
@@ -16,7 +18,7 @@ export function SectionHeading({
   return (
     <div className={`max-w-3xl ${alignment}`}>
       <p className="section-kicker">{eyebrow}</p>
-      <h2 className="section-title">{title}</h2>
+      <h2 id={id} className="section-title">{title}</h2>
       {description && <p className="section-description">{description}</p>}
     </div>
   );

@@ -16,21 +16,21 @@ WAKEZILLA__SERVER__PROXY_PORT=3100 wakezilla proxy-server
 WAKEZILLA__SERVER__CLIENT_PORT=3101 wakezilla client-server
 ```
 
-## Dashboard requests assume port 3000
+## Dashboard and API must share an origin
 
-When the development frontend is opened from a URL containing a port, its API client currently targets port `3000`. A dashboard served from another explicit port can therefore load while its API requests fail.
+The current dashboard uses relative `/api` URLs. A reverse proxy must serve the frontend and forward its API requests under the same origin. Serving only the static frontend files is not sufficient.
 
-Use port `3000` for direct dashboard access, or verify same-origin behavior behind your reverse proxy before deploying a custom port.
+Port `3000` remains the default for direct access. Older dashboard builds assumed this port explicitly; refresh the frontend when upgrading to the current interface.
 
 ## Inactivity defaults differ by entry point
 
 The web interface and shared machine model default to `60` minutes. The backend fallback for an omitted or legacy `inactivity_period` field is currently `30` minutes.
 
-Always save an explicit value through the machine detail page or API.
+Always save an explicit value through **Client settings** in the machine window or through the API.
 
-## New machines hide inactivity during creation
+## Client settings are collapsed during creation
 
-The creation form uses `60` minutes but does not show the field. Create the machine, open its detail page, then review **Inactivity Period (minutes)**.
+The creation form starts at `60` minutes. Expand **Client settings** to review or change **Inactivity (minutes)** before saving. A value of `0` disables automatic shutdown; it does not disable Wake-on-LAN or port forwarding.
 
 ## Inactivity requires a port forward
 
